@@ -1,0 +1,164 @@
+========== How to Compile CUDA ==========
+nvcc file [-option ARG] [`pkg-config --cflags --libs LIBRARY`]
+
+nvcc file.cu    // simple compilation of a file
+    - o         // name and location of the output file
+    -include    // header files that must be pre-included during processing
+    - l         // libraries to be used in the linking stage (without the library file extension)
+    - I         // specify system include search paths
+    -odir       // specify the output file directory
+
+    nvcc *.cpp *.cu -o o_file `pkg-config --cflags --libs opencv4`
+
+
+
+========== GPU Architecture ==========
+Thread       - is a simple progrram run on GPU
+Thread block - groups of threads cooperating to solve a sub-problem
+
+SM  - Stream Multiprocessors, is a number of simple processors and memories that run threads
+GPU - consists of multiple Stream Multiprocessors (SMs)
+    - allocates thread blocks to SMs
+
+Guarantees
+    - all threads in the same thread block run on the same SM at the same time (in parallel)
+    - all blocks of a thread finish before any new blocks of another thread are allowed to run
+
+Memory
+    - thread's local memory (memory of a thread) - accessible only to the thread
+    - block's shared memory (memory of SM)       - accessible to all threads in the block
+    - global memory         (memory of GPU)      - accessible to all threads
+
+Barrier
+    - point in the program where all threads (in a block) need to stop and wait
+    - when all threads (of a block) reached the barrier they can proceed
+    - to synchronise threads on a grid level use consecutive kernel calls
+
+
+
+========== GPU Optimisation ==========
+memory speed:
+    thread's local memory > block's shared memory >> GPU's global memory >> CPU's memory
+
+memroy access speed:
+    coalesced > strided > random
+
+atomic operations for read–modify–write operations are
+    - hardware implemented
+    - slower than non-atomic versions
+    - not implemented for all read-modify-write operations
+    - not implemented for all data types because, e.g. (a + b) + c ≠ a + (b + c) for floating point data types
+
+strategies for optimising
+    - high arithmetic intensity, i.e. math/memory
+        * minimise time spent on memory access
+        * put data in fast memory, i.e. local > shared > global
+        * use coalesced global memory, i.e. adjacent threads access continuous chuncks of memory
+    - avoid thread divergence, i.e. through control flow statements
+        * if-else statements make adjacent threads perform different tasks
+        * for     statements make some threads wait for other threads to finish longer loops, e.g. based on the thread index
+
+
+
+========== GPU Methods ==========
+Map                 - one-to-one  op (always),
+    where for every thread:
+        read memory location is specific
+        write memory location is specific
+            e.g. apply a function to every pixel of an image and save it as a pixel in a new image
+
+Gather              - many-to-one  op (usually),
+    where for every thread:
+        read memory location is computed
+        write memory location is specific
+            e.g. compute the average of some 5 pixels and save it as a pixel in a new image
+
+Stencil             - several-to-one  op (always),
+    where for every thread:
+        read memory location is computed from a pre-determined pattern
+        write memory location is specific
+            e.g. read all neighboring pixels in an image and save the average as a pixel in a new image
+
+Scatter             - one-to-many op (usually),
+    where for every thread:
+        read memory location is spedific
+        write memory location is computed
+            e.g. write a fraction of a pixel of an image to 5 pixels of a new image
+
+Transpose           - one-to-one  op (always),
+    reorders data elements in memory; can be implemented as either scatter or gather operation
+
+Reduce              - all-to-one  op (always),
+    it takes as an input:                       outputs:
+        an array of values                          a single value
+        binary associative operator                     e.g. sum of all values of the input array
+
+Segmented Reduce    - all-to-many op (usually),
+    it takes as an input:                       outputs:
+        an array of values                          an array of reduce values for each segment
+        segment head array (subarray starts)            e.g. array of sums of values in each segment of the input array
+        binary associative operator
+
+Scan                - all-to-all  op (usually),
+    it takes as an input:                       outputs:
+        an array of values                          an array of values
+        binary associative operator                     e.g. cumulative sum of the values from the input array
+        identity element for the operator
+
+Segmented Scan      - all-to-all  op (usually),
+    it takes as an input:                       outputs:
+        an array of values                          an array of scans for each segment
+        segment head array (subarray starts)            e.g. cumulative sum of the values for each subarray marked by a segment head
+        binary associative operator
+        identity element for the operator
+
+
+Histogram           - all-to-many op (always),
+    it takes as an input:                       output:
+        an array of values                          an array of values
+        number of bins                                  where each value represents count of elements from the input array for each bin
+
+Compact/Filter      - all-to-many op (always),
+    it takes as an input:                       output:
+        an array of values                          array of values
+        predicate                                       that have predicate true
+    implementation note:
+        create a predicte array
+        (exclusive) scan the predicate array
+        the scan result gives adresses of the input values in the output array
+
+
+
+========== Complexity ==========
+Step complexity is the total amount of steps doen, i.e. total number of groups of parallel operations
+Work complexity is the total amount of work done, i.e. total number of operations
+Parallel algorithm is work efficient if the work complexity is asymptotically the same as that of a sequential algorithm
+
+
+
+========== Sparse Matrices ==========
+
+Compressed Sparse Row - is a representation of sparse matrices with three components
+    value array       - sequence of all non-zero elements
+    column array      - column of the value array entry in the original matrix
+    row pointer array - indices in the value array of the first non-zero row elements of the original matrix
+
+Sparse Matrix Multiplication by Vector
+    make Compressed Sparse Row representation of the sparse matrix
+    multiply each element of value array by the element of the vector corresponding to its column, i.e. use column array
+    perform Segmented Reduce where the segment head array is the row pointer array
+
+
+
+========== Optimisation ==========
+Weak Scaling    - solve a bigger problem (fixed problem size per core)
+Strong Scaling  - solve a problem faster (fixed total problem size)
+
+Hotspot (bottleneck) understangind
+    - run a profiler (Gproof, Vtune, VerySleepy) to understand which function takes most of the time
+    - always start by measuring memory bandwidth, as most GPU codes are memory limited
+
+
+
+========== Streams ==========
+A stream is a sequence of operations that executes in order. Assigning kernel executions or memory copying to different streams causes them to run concurrently.
