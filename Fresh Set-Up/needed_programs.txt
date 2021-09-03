@@ -1,0 +1,7 @@
+# --------------- Additionaly Installed Programs:
+# Brabve browser            # sync the settings with mac & phone
+# VS Code                   # sync the settings with GitHub
+
+# --------------- Additionaly Installed Packages:
+# xdotool                   # needed for shortcuts
+# zsh-syntax-highlighting   # needed for zsh setup
