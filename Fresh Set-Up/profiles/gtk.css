@@ -1,0 +1,38 @@
+/* paste to ~/.config/gtk-3.0 */
+
+ /*
+ * Bindings for GtkTextView and GtkEntry
+ */
+@binding-set gtk-macOS
+{
+  /* jump to the end or beginning of the closest word */
+  bind "<Alt>Left" { "move-cursor" (words, -1, 0) };
+  bind "<Shift><Alt>Left" { "move-cursor" (words, -1, 1) };
+  bind "<Alt>Right" { "move-cursor" (words, 1, 0) };
+  bind "<Shift><Alt>Right" { "move-cursor" (words, 1, 1) };
+
+  /* jump to the end or beginning of the line */
+  bind "<Super>Left" { "move-cursor" (paragraph-ends, -1, 0) };
+  bind "<Shift><Super>Left" { "move-cursor" (paragraph-ends, -1, 1) };
+  bind "<Super>Right" { "move-cursor" (paragraph-ends, 1, 0) };
+  bind "<Shift><Super>Right" { "move-cursor" (paragraph-ends, 1, 1) };
+
+  /* copy, cut, and paste clipboard */
+  bind "<Super>c" { "copy-clipboard" () };
+  bind "<Super>x" { "cut-clipboard" () };
+  bind "<Super>v" { "paste-clipboard" () };
+
+  /* delete from cursor to/from the word/paragraph end */
+  bind "<Alt>delete" { "delete-from-cursor" (word-ends, 1) };
+  bind "<Super>delete" { "delete-from-cursor" (paragraph-ends, 1) };
+  bind "<Alt>backspace" { "delete-from-cursor" (word-ends, -1) };
+  bind "<Super>backspace" { "delete-from-cursor" (paragraph-ends, -1) };
+
+  bind "<Super>f" { "start-interactive-search" () };
+
+}
+
+
+* {
+  -gtk-key-bindings: gtk-macOS
+}
