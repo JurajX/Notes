@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir="~/.xkb/keycodes"
+dir="/home/${USER}/.xkb/keycodes"
 file="macOS"
 content="xkb_keycodes \"macOS\" {
   <LCTL> = 133;     // Super_L -> Ctrl_L
@@ -19,7 +19,7 @@ fi
 
 
 touch "${dir}/${file}"
-echo "${macOS} > ${dir}/${file}"
+echo "${content}" > "${dir}/${file}"
 echo "File with key re-mapping created."
 
 setxkbmap -print | sed -e '/xkb_keycodes/s/"[[:space:]]/+macOS&/' | xkbcomp -I${HOME}/.xkb - ${DISPLAY}
