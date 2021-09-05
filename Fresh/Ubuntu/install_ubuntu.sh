@@ -10,5 +10,5 @@ else
 fi
 
 eval "cp gtk.css ${dir}"
-eval "remap_system_keys.sh"
-eval "set_terminal_shortcuts_and_colours.sh"
+eval "./remap_system_keys.sh"
+eval "./set_terminal_shortcuts_and_colours.sh"
