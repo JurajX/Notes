@@ -38,6 +38,7 @@ do
     $( ${cmd} ${key_values[${i}]} )
 done
 
+echo "Sortcuts for Terminal are set!"
 
 
 # ------------------------- Set terminal colours
@@ -97,3 +98,5 @@ for i in ${!key_values[@]}
 do
     $( ${cmd} ${key_values[${i}]} )
 done
+
+echo "Colours and fonts for terminal are set!"

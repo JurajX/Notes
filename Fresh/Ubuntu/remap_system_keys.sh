@@ -12,15 +12,15 @@ content="xkb_keycodes \"macOS\" {
 if [ -d "${dir}" ]; then
     echo "Directory ${dir} already exists, skipping."
 else
-    mkdir -p "${dir}"
+    $( mkdir -p "${dir}" )
     echo "Directory ${dir} created."
 fi
 
 
 
-touch "${dir}/${file}"
+$( touch "${dir}/${file}" )
 echo "${content}" > "${dir}/${file}"
 echo "File with key re-mapping created."
 
-setxkbmap -print | sed -e '/xkb_keycodes/s/"[[:space:]]/+macOS&/' | xkbcomp -I${HOME}/.xkb - ${DISPLAY}
+$( setxkbmap -print | sed -e '/xkb_keycodes/s/"[[:space:]]/+macOS&/' | xkbcomp -I${HOME}/.xkb - ${DISPLAY} )
 echo "Re-mapping applied. Ignore the warnings!"

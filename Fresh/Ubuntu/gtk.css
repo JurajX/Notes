@@ -1,0 +1,44 @@
+/* paste to /home/${USER}/.config/gtk-3.0 */
+
+@binding-set gtk-macOS
+{
+  /* jump to the beginning or end of the closest word */
+  bind "<Alt>Left" { "move-cursor" (words, -1, 0) };
+  bind "<Shift><Alt>Left" { "move-cursor" (words, -1, 1) };
+  bind "<Alt>Right" { "move-cursor" (words, 1, 0) };
+  bind "<Shift><Alt>Right" { "move-cursor" (words, 1, 1) };
+
+  /* jump to the beginning or end of the line */
+  bind "<Ctrl>Left" { "move-cursor" (display-line-ends, -1, 0) };
+  bind "<Shift><Ctrl>Left" { "move-cursor" (display-line-ends, -1, 1) };
+  bind "<Ctrl>Right" { "move-cursor" (display-line-ends, 1, 0) };
+  bind "<Shift><Ctrl>Right" { "move-cursor" (display-line-ends, 1, 1) };
+
+  /* jump to the beginning or end of the paragraph */
+  bind "<Alt>Up" { "move-cursor" (paragraph-ends, -1, 0) };
+  bind "<Shift><Alt>Up" { "move-cursor" (paragraph-ends, -1, 1) };
+  bind "<Alt>Down" { "move-cursor" (paragraph-ends, 1, 0) };
+  bind "<Shift><Alt>Down" { "move-cursor" (paragraph-ends, 1, 1) };
+
+  /* jump to the beginning or end of the buffer */
+  bind "<Ctrl>Up" { "move-cursor" (buffer-ends, -1, 0) };
+  bind "<Shift><Ctrl>Up" { "move-cursor" (buffer-ends, -1, 1) };
+  bind "<Ctrl>Down" { "move-cursor" (buffer-ends, 1, 0) };
+  bind "<Shift><Ctrl>Down" { "move-cursor" (buffer-ends, 1, 1) };
+
+  /* delete from cursor to the beginning or end of the word */
+  bind "<Alt>BackSpace" { "delete-from-cursor" (word-ends, -1) };
+  bind "<Alt>Delete" { "delete-from-cursor" (word-ends, 1) };
+
+  /* delete from cursor to the beginning or end of the line */
+  bind "<Ctrl>Delete" { "move-cursor" (display-line-ends, 1, 1) "backspace" () };
+  bind "<Ctrl>BackSpace" { "move-cursor" (display-line-ends, -1, 1) "backspace" () };
+
+  /* alternagive search */
+  bind "<Alt>f" { "start-interactive-search" () };
+}
+
+
+* {
+  -gtk-key-bindings: gtk-macOS
+}
