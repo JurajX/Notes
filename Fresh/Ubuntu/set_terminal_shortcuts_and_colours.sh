@@ -35,7 +35,7 @@ key_values=(
 cmd="gsettings set org.gnome.Terminal.Legacy.Keybindings:/org/gnome/terminal/legacy/keybindings/"
 for i in ${!key_values[@]}
 do
-    $( ${cmd} ${key_values[${i}]} )
+    eval "${cmd} ${key_values[${i}]}"
 done
 
 echo "Sortcuts for Terminal are set!"
@@ -96,7 +96,7 @@ cmd="gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/
 
 for i in ${!key_values[@]}
 do
-    $( ${cmd} ${key_values[${i}]} )
+    eval "${cmd} ${key_values[${i}]}"
 done
 
 echo "Colours and fonts for terminal are set!"

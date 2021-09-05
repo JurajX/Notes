@@ -9,6 +9,6 @@ else
     echo "Directory ${dir} created."
 fi
 
-$( cp gtk.css ${dir} )
-$( "remap_system_keys.sh" )
-$( "set_terminal_shortcuts_and_colours.sh" )
+eval "cp gtk.css ${dir}"
+eval "remap_system_keys.sh"
+eval "set_terminal_shortcuts_and_colours.sh"
