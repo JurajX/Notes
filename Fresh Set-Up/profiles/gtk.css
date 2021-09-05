@@ -12,23 +12,34 @@
   bind "<Shift><Alt>Right" { "move-cursor" (words, 1, 1) };
 
   /* jump to the end or beginning of the line */
-  bind "<Super>Left" { "move-cursor" (paragraph-ends, -1, 0) };
-  bind "<Shift><Super>Left" { "move-cursor" (paragraph-ends, -1, 1) };
-  bind "<Super>Right" { "move-cursor" (paragraph-ends, 1, 0) };
-  bind "<Shift><Super>Right" { "move-cursor" (paragraph-ends, 1, 1) };
+  bind "<Super>Left" { "move-cursor" (display-line-ends, -1, 0) };
+  bind "<Shift><Super>Left" { "move-cursor" (display-line-ends, -1, 1) };
+  bind "<Super>Right" { "move-cursor" (display-line-ends, 1, 0) };
+  bind "<Shift><Super>Right" { "move-cursor" (display-line-ends, 1, 1) };
+
+  /* jump to the end or beginning of the text */
+  bind "<Super>Up" { "move-cursor" (buffer-ends, -1, 0) };
+  bind "<Shift><Super>Up" { "move-cursor" (buffer-ends, -1, 1) };
+  bind "<Super>Down" { "move-cursor" (buffer-ends, 1, 0) };
+  bind "<Shift><Super>Down" { "move-cursor" (buffer-ends, 1, 1) };
+
+  /* delete from cursor to the word/line end/beginning */
+  bind "<Alt>Delete" { "delete-from-cursor" (word-ends, 1) };
+  bind "<Alt>BackSpace" { "delete-from-cursor" (word-ends, -1) };
+  bind "<Super>BackSpace" { "move-cursor" (display-line-ends, -1, 1) "backspace" () };
+  bind "<Super>Delete" { "move-cursor" (display-line-ends, 1, 1) "backspace" () };
 
   /* copy, cut, and paste clipboard */
   bind "<Super>c" { "copy-clipboard" () };
   bind "<Super>x" { "cut-clipboard" () };
   bind "<Super>v" { "paste-clipboard" () };
 
-  /* delete from cursor to/from the word/paragraph end */
-  bind "<Alt>Delete" { "delete-from-cursor" (word-ends, 1) };
-  bind "<Super>Delete" { "delete-from-cursor" (paragraph-ends, 1) };
-  bind "<Alt>BackSpace" { "delete-from-cursor" (word-ends, -1) };
-  bind "<Super>BackSpace" { "delete-from-cursor" (paragraph-ends, -1) };
+  bind "<Super>a" { "select-all" () };
 
   bind "<Super>f" { "start-interactive-search" () };
+
+  bind "<Super>z" { "undo" () };
+  bind "<Shift><Super>z" { "redo" () };
 
 }
 
