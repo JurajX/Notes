@@ -23,10 +23,10 @@
   bind "<Super>v" { "paste-clipboard" () };
 
   /* delete from cursor to/from the word/paragraph end */
-  bind "<Alt>delete" { "delete-from-cursor" (word-ends, 1) };
-  bind "<Super>delete" { "delete-from-cursor" (paragraph-ends, 1) };
-  bind "<Alt>backspace" { "delete-from-cursor" (word-ends, -1) };
-  bind "<Super>backspace" { "delete-from-cursor" (paragraph-ends, -1) };
+  bind "<Alt>Delete" { "delete-from-cursor" (word-ends, 1) };
+  bind "<Super>Delete" { "delete-from-cursor" (paragraph-ends, 1) };
+  bind "<Alt>BackSpace" { "delete-from-cursor" (word-ends, -1) };
+  bind "<Super>BackSpace" { "delete-from-cursor" (paragraph-ends, -1) };
 
   bind "<Super>f" { "start-interactive-search" () };
 
