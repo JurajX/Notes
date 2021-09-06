@@ -22,5 +22,5 @@ eval "touch ${dir}/${file}"
 eval "echo \"${content}\" > ${dir}/${file}"
 echo "File with key re-mapping created."
 
-eval "setxkbmap -print | sed -e '/xkb_keycodes/s/\"[[:space:]]/+macOS&/' | xkbcomp -w 3 -I${HOME}/.xkb - ${DISPLAY}""
-echo "Re-mapping applied. Ignore the warnings!"
+eval "setxkbmap -print | sed -e '/xkb_keycodes/s/\"[[:space:]]/+macOS&/' | xkbcomp -w 3 -I${HOME}/.xkb - ${DISPLAY}"
+echo "Re-mapping applied."
