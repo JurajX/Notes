@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# --------------- Set gtk3 Shortcuts
 dir="/home/${USER}/.config/gtk-3.0/"
 
 if [ -d "${dir}" ]; then
@@ -10,5 +11,3 @@ else
 fi
 
 eval "cp gtk.css ${dir}"
-eval "./remap_system_keys.sh"
-eval "./set_terminal_shortcuts_and_colours.sh"

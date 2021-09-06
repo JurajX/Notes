@@ -1,0 +1,14 @@
+# --------------- Additionaly Installed Programs:
+# Brabve browser                      # sync the settings with mac & phone
+# VS Code                             # sync the settings with GitHub
+# Albert                              # change settings
+
+# --------------- Additionaly Installed Packages:
+# zsh-syntax-highlighting             # needed for zsh setup
+# xdotool                             # useful for shortcuts
+# gnome-tweak-tool                    # needed for custom themes
+# gnome-tweaks                        # needed for custom themes
+# gnome-shell-extensions              # needed for custom themes
+# gnome-shell-extension-dahstodock    # dock customisation
+# gnome-shell-extension-multi-monitor # separate workspace on all monitors
+# dconf-editor                        # needed to see org. tree

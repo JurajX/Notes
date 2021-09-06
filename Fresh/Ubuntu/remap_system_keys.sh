@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# --------------- Remap System Keys
 dir="/home/${USER}/.xkb/keycodes"
 file="macOS"
 content="xkb_keycodes {

@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# =============== Add Workspace to Secondary Screen
-gsettings set org.gnome.mutter workspaces-only-on-primary false
-gsettings set org.gnome.shell.overrides workspaces-only-on-primary false
-
-
-
 # =============== Shortcuts
 
 # --------------- Manual Settup of Shortcuts
