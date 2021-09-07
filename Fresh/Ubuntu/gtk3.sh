@@ -11,3 +11,4 @@ else
 fi
 
 eval "cp gtk.css ${dir}"
+echo "Copied gtk.css to ${dir}."
