@@ -1,0 +1,70 @@
+[global_config]
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  focus = system
+  title_font = Monospace 14
+  title_use_system_font = False
+[keybindings]
+  close_term = <Primary>w
+  close_window = <Primary>q
+  copy = <Primary>c
+  cycle_next = <Super>Tab
+  cycle_prev = <Shift><Super>Tab
+  edit_tab_title = None
+  edit_terminal_title = None
+  edit_window_title = None
+  full_screen = <Primary><Super>f
+  go_down = None
+  go_left = None
+  go_next = None
+  go_prev = None
+  go_right = None
+  go_up = None
+  help = None
+  hide_window = <Primary>m
+  insert_number = None
+  insert_padded = None
+  move_tab_left = <Alt>Left
+  move_tab_right = <Alt>Right
+  new_tab = <Primary>t
+  new_terminator = <Primary><Shift>n
+  new_window = <Primary>n
+  next_tab = <Super>Tab
+  paste = <Primary>v
+  prev_tab = <Shift><Super>Tab
+  reset = None
+  reset_clear = <Primary>k
+  resize_down = None
+  resize_left = None
+  resize_right = None
+  resize_up = None
+  rotate_ccw = None
+  rotate_cw = None
+  scaled_zoom = None
+  search = <Primary>f
+  split_horiz = <Primary>h
+  split_vert = <Primary>g
+  toggle_scrollbar = None
+  toggle_zoom = None
+  zoom_in = <Super>equal
+  zoom_normal = <Super>0
+  zoom_out = <Super>minus
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#ffffff"
+    cursor_color = "#aaaaaa"
+    font = Monospace 14
+    foreground_color = "#000000"
+    palette = "#000000:#ff0000:#4e9a06:#cdcd00:#0000ee:#cd00cd:#00cdcd:#e5e5e5:#000000:#ff0000:#4e9a06:#cdcd00:#0000ee:#cd00cd:#00cdcd:#e5e5e5"
+    scrollback_lines = 10000
+    show_titlebar = False
+    use_system_font = False
