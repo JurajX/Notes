@@ -8,7 +8,7 @@ key_values=(
 "switch-input-source \"['<Alt>space']\""
 "switch-input-source-backward \"['<Shift><Alt>space']\""
 "switch-applications \"['<Ctrl>Tab']\""
-"switch-applications-backward \"['<Ctrl><Super>Tab']\""
+"switch-applications-backward \"['<Ctrl><Shift>Tab']\""
 "switch-windows \"['<Alt>Tab']\""
 "switch-windows-backward \"['<Shift><Alt>Tab']\""
 "switch-group \"[]\""
