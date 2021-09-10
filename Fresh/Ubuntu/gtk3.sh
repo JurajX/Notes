@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # --------------- Set gtk3 Shortcuts
-dir="/home/${USER}/.config/gtk-3.0/"
+dir="/home/${USER}/.config/gtk-3.0"
+file="gtk.css"
 
 if [ -d "${dir}" ]; then
     echo "Directory ${dir} already exists, skipping."
@@ -10,5 +11,5 @@ else
     echo "Directory ${dir} created."
 fi
 
-eval "cp gtk.css ${dir}"
-echo "Copied gtk.css to ${dir}."
+eval "cp ${file} ${dir}/gtk.css"
+echo "Copied ${file} to ${dir}."

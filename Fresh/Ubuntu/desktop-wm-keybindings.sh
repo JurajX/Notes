@@ -24,20 +24,20 @@ key_values=(
 "move-to-workspace-2 \"[]\""
 "move-to-workspace-3 \"[]\""
 "move-to-workspace-4 \"[]\""
-"move-to-workspace-up \"[]\""       # might be usefull
-"move-to-workspace-down \"[]\""     # might be usefull
-"move-to-workspace-left \"[]\""     # might be usefull
-"move-to-workspace-right \"[]\""    # might be usefull
-"move-to-workspace-last \"[]\""     # might be usefull
+"move-to-workspace-up \"['<Shift><Super>Left']\""
+"move-to-workspace-down \"['<Shift><Super>Right']\""
+"move-to-workspace-left \"[]\""
+"move-to-workspace-right \"[]\""
+"move-to-workspace-last \"[]\""
 "switch-to-workspace-1 \"[]\""
 "switch-to-workspace-2 \"[]\""
 "switch-to-workspace-3 \"[]\""
 "switch-to-workspace-4 \"[]\""
-"switch-to-workspace-up \"[]\""    # might be usefull
-"switch-to-workspace-down \"[]\""    # might be usefull
-"switch-to-workspace-left \"[]\""    # might be usefull
-"switch-to-workspace-right \"[]\""    # might be usefull
-"switch-to-workspace-last \"[]\""    # might be usefull
+"switch-to-workspace-up \"['<Super>Left']\""
+"switch-to-workspace-down \"['<Super>Right']\""
+"switch-to-workspace-left \"[]\""
+"switch-to-workspace-right \"[]\""
+"switch-to-workspace-last \"[]\""
 "toggle-on-all-workspaces \"[]\""
 # window move
 "move-to-center \"[]\""

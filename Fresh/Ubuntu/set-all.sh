@@ -18,3 +18,12 @@ eval "./terminal-profile.sh"
 
 # ----- make workspace available on all screens
 eval "./workspace.sh"
+
+# ----- set terminator preferences
+eval "./terminator-preferences.sh"
+
+# ----- set terminator preferences
+eval "./dash-to-dock.sh"
+
+# ----- set terminator preferences
+eval "./general-preferences.sh"
