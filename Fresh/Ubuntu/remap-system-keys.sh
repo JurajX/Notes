@@ -8,6 +8,8 @@ content="xkb_keycodes {
   <LWIN> = 37;      // Ctrl_L  -> Super_L
   <RCTL> = 134;     // Super_R -> Ctrl_R
   <RWIN> = 105;     // Ctrl_R  -> Super_R
+  <LSGT> = 49;      // ~       -> ±§
+  <TLDE> = 94;      // ±§      -> ~
 };"
 
 if [ -d "${dir}" ]; then
