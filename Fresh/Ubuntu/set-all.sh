@@ -22,8 +22,11 @@ eval "./workspace.sh"
 # ----- set terminator preferences
 eval "./terminator-preferences.sh"
 
-# ----- set terminator preferences
+# ----- set dash-to-dock
 eval "./dash-to-dock.sh"
 
-# ----- set terminator preferences
+# ----- set general preferences
 eval "./general-preferences.sh"
+
+# ----- set window organisation
+eval "./window-resizing.sh"
