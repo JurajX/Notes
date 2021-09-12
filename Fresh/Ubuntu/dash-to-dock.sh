@@ -3,7 +3,7 @@
 cmd="gsettings set org.gnome.shell.extensions.dash-to-dock"
 
 key_values=(
-"click-action 'quit'"
+"click-action 'minimize-or-overview'"
 "preferred-monitor 0"
 "force-straight-corner false"
 "show-show-apps-button true"
