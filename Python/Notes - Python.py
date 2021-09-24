@@ -623,3 +623,35 @@ ImportWarning              # Base category for warnings triggered during the pro
 UnicodeWarning             # Base category for warnings related to Unicode
 BytesWarning               # Base category for warnings related to bytes and bytearray
 ResourceWarning            # Base category for warnings related to resource usage
+
+# ========== SUBPROCESS MODULE ==========
+# import subprocess
+
+subprocess.run(
+    args,                   # list of args to exectute, e.g. ['ls', '-la']; is 'ls -la' if shell=True
+    *,
+    stdin=None,
+    input=None,             # input for the command; e.g. input for grep
+    stdout=None,            # where should be stdout captured
+    stderr=None,            # as above; e.g. subprocess.PIPE or file or subprocess.DEVNULL
+    capture_output=False,   # redirect stdout and stderr to subprocess.PIPE; by default captured by bytes
+    shell=False,            # run the commands in shell; preffered way of passing is string
+    cwd=None,
+    timeout=None,
+    check=False,            # if ecexturion fails then python throws an exception
+    encoding=None,
+    errors=None,
+    text=None,              # if True, outputs are captured as string
+    env=None,
+    universal_newlines=None,
+    **other_popen_kwargs
+)
+
+subprocess.run(['ls', '-la'])         # runs 'ls -la' and prints the output; returns CompletedProcess
+subprocess.run('ls -la', shell=True)  # as above, but more hazardous; run only if you pass the args yourself
+
+subprocess.CompletedProcess
+    .args           # returns the passed args
+    .returncode     # returns the return code from the command
+    .stdout         # returns the std out in case the output is captured
+    .stderr         # returns the std err in case it's captured
