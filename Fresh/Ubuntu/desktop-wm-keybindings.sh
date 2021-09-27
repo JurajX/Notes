@@ -69,7 +69,7 @@ key_values=(
 "unmaximize \"[]\""
 "maximize-horizontally \"[]\""
 "maximize-vertically \"[]\""
-"panel-main-menu \"[]\""
+"panel-main-menu \"['<Primary>space']\""
 "panel-run-dialog \"[]\""
 "raise \"[]\""
 "raise-or-lower \"[]\""
