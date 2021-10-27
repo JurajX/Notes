@@ -50,6 +50,7 @@ apm install linter-chktex
 apm install python-isort
 # manually as 'apm install python-yapf' not working
 curl -L -o ~/Downloads/python-yapf.zip https://github.com/blacktop/atom-python-yapf/zipball/master
+cd ~/Downloads
 unzip ~/Downloads/python-yapf.zip
 rm ~/Downloads/python-yapf.zip
 mv ~/Downloads/blacktop-atom-python-yapf-* ~/.atom/packages/python-yapf
