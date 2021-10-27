@@ -437,7 +437,7 @@ identifier: statement       // statement marked by 'identifier', i.e. to be exec
 
 
 //---------- Boolean Operations
-!x;                         // negation of x
+!x; not x;                  // negation of x
 x&&y; x and y;              // logical and
 x||y; x or y;               // logiacal or
 
@@ -452,7 +452,7 @@ x<=>y;                      // three-way comparison; c++20 and <compare> header
 //---------- Bitwise Operations
 x&y;                        // bitwise and operator
 x&=y;                       // x = x & y
-x|y;                        // bitwise and operator
+x|y;                        // bitwise or operator
 x|=y;                       // x = x | y
 x<<N; x>>N;                 // left, right shifts bits of x by N
 x<<=N; x>>=N;               // x = x<<N; x = x>>N;
