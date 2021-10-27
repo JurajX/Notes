@@ -23,6 +23,7 @@ pip3 install --upgrade jupyter
 pip3 install --upgrade jupyter_kernel_gateway
 pip3 install --upgrade pygame==2.0.0.dev10
 pip3 install --upgrade gym
+pip3 install --upgrade mujoco-py
 
 pip3 install --upgrade pytest
 pip3 install --upgrade coverage
