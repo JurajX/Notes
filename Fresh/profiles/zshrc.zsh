@@ -58,6 +58,16 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)         # Include hidden files
 
+# make sure that 'sudo' and 'su' are executed only from '/usr/bin' and nowhere else; only for Mac Book
+function check_file() {
+    if [ -f "/usr/local/bin/$1" ]; then
+        echo "Fake sudo/su detected in /usr/local/bin/!"
+        return -1
+    fi
+}
+alias sudo="check_file sudo && /usr/bin/sudo $@"
+alias su="check_file su && /usr/bin/su $@"
+
 # Load zsh-syntax-highlighting; should be last
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 
@@ -65,5 +75,5 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/d
 # export LD_LIBRARY_PATH=/usr/lib/cuda/lib64:$LD_LIBRARY_PATH
 # export LD_LIBRARY_PATH=/usr/lib/cuda/include:$LD_LIBRARY_PATH
 
-# set XQuartz X11 display, only for MAC Book!
+# set XQuartz X11 display, only for Mac Book!
 # export DISPLAY=":0"
