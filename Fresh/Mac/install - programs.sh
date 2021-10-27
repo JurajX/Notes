@@ -4,11 +4,15 @@ brew install zsh-syntax-highlighting
 
 # copy .zshrc to ~ (home) directory
 # restart terminal
-sudo chmod -R 755 /usr/local/share/zsh/site-functions /usr/local/share/zsh
+# sudo chmod -R 755 /usr/local/share/zsh/site-functions /usr/local/share/zsh
 
-brew install sdl2
-brew install sdl2_ttf
-brew install sdl2_image
+brew install sdl2 sdl2_ttf sdl2_image
+
+brew install cmake
+brew install eigen
+brew install libtorch
+
+brew install llvm gcc
 
 brew install --cask atom
 brew install --cask intellij-idea
