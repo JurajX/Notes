@@ -1,6 +1,8 @@
 // ========================== Google Test
 # include "gtest/gtest.h"
 
+
+
 // ========================== Cmake SetUp
 // NOTE: cmake comment starts with # not //
 
@@ -67,17 +69,17 @@ class Fixture : public ::testing::Test {
 
 
 // ========================== Test Case
-TEST(TestSuiteName, TestName) {
+TEST(TestSuiteName, TestName) {         // standard test
     // test body
 }
 
-TEST_F(TestFixtureName, TestName) {
+TEST_F(TestFixtureName, TestName) {     // test with a fixture
     // test body
 }
 
 
 
-// ========================== Assertions Reference
+// ========================== Assertions
 
 // fatal failure     -> aborts the current test case imediately, possibly skipping clean-up (can cause mem leaks)
 // non-fatal failure -> allows the current test case to continue running
@@ -138,19 +140,21 @@ ADD_FAILURE_AT(file, line)  // non-fatal failure at the file path and line numbe
     _DEBUG_DEATH(stmnt, matcher)
     _EXIT(stmnt, pred, matcher)
 
-
-
-// ========================== Assertion Result
-
+// ------- Assertion Result
 testing::AssertionResult IsEven(int n) {
   if ((n % 2) == 0) return testing::AssertionSuccess();         // test should succees
   else return testing::AssertionFailure() << n << " is odd";    // test should fail
 }
 EXPECT_TRUE(IsEven(3));                                         // will fail with a nice message
 
+// ------- Type Assertions
+::testing::StaticAssertTypeEq<T1, T2>() // generates compile time error if T1 and T2 are different; used inside template code
+
+
 
 // ========================== Matchers
 #include "gmock/gmock.h"
+// all matchers are in the ::testing:: namespace
 
 _THAT(arg, matcher) // arg will be referred to below
 
@@ -200,12 +204,119 @@ StrEq(string)           // arg is equal to string
 StrNe(string)           // arg is not equal to string
 WhenBase64Unescaped(m)  // arg is a base-64 escaped string whose unescaped string matches m
 
-// ------- Wildcard
+// ------- Container Matchers
+BeginEndDistanceIs(m)           // arg is a container end() - begin() conforms with matcher m; e.g. m is Lt(2); see also SizeIs(m)
+IsEmpty()                       // arg is an empty container
+SizeIs(m)                       // arg.size() conforms to the matcher m
 
-using ::testing::AllOf;
-using ::testing::Gt;
-using ::testing::Lt;
-using ::testing::StartsWith;
+ContainerEq(cont)               // same as Eq(cont) with the failure message including which elements differ
+Contains(e)                     // arg contains an element that matches e (a value or a matcher)
+Contains(e).Times(n)            // as above and the number of matches is n (a value or a matcher); allows e.g. Contains(e).Times(0)
+Each(e)                         // arg is a container where every element matches e (a value or a matcher)
 
-EXPECT_THAT(value1, StartsWith("Hello"));
-ASSERT_THAT(value3, AllOf(Gt(5), Lt(10)));
+Pointwise(m, cont)                  // arg.size == cont.size(), and for all i m(std::tuple(arg_i, cont_i)) returns true
+Pointwise(m, {e0, ..., en})         // as above, but use m(std::tuple(arg_i, e_i))
+UnorderedPointwise(m, container)    // same as Pointwise(m, container), but ignores the order of elements
+UnorderedPointwise(m, {e0, ..., en})// same as above
+
+WhenSorted(m)                   // arg is sorted using the < operator, it matches container matcher m
+WhenSortedBy(comparator, m)     // same as above with a given comparator
+
+ElementsAre(e0, ..., en)        // arg has n + 1 elements, where the i-th element matches ei (a value or a matcher)
+ElementsAreArray({e0, ..., en}) // same as above except element values/matchers come from an initializer list ...
+ElementsAreArray(a_container)   // ... STL-style container ...
+ElementsAreArray(beg, end)      // ... iterator range ...
+ElementsAreArray(array)         // ... C-style array ...
+ElementsAreArray(array, count)  // ... C-style array
+
+UnorderedElementsAre(e0, ..., en)           // arg has n + 1 elems; exists bijective map between elems and  ei's (a value or a matcher)
+UnorderedElementsAreArray({e0, ..., en})    // same as above except element values/matchers come from an initializer list ...
+UnorderedElementsAreArray(a_container)      // ... STL-style container ...
+UnorderedElementsAreArray(begin, end)       // ... iterator range ...
+UnorderedElementsAreArray(array)            // ... C-style array ...
+UnorderedElementsAreArray(array, count)     // ... C-style array
+
+IsSubsetOf({e0, ..., en})       // arg matches UnorderedElementsAre(x0, x1, ..., xk) where {x0, x1, ..., xk} ⊆ {e0, ..., en}
+IsSubsetOf(a_container)
+IsSubsetOf(begin, end)
+IsSubsetOf(array)
+IsSubsetOf(array, count)
+
+IsSupersetOf({e0, ..., en})     // Some subset of arg matches UnorderedElementsAre({e0, ..., en})
+IsSupersetOf(a_container)
+IsSupersetOf(begin, end)
+IsSupersetOf(array)
+IsSupersetOf(array, count)
+
+// ------- Member Matchers
+// for more on FieldsAre, see: https://google.github.io/googletest/reference/matchers.html#member-matchers
+Field(&class::field, m)             // arg.field (or arg->field) matches matcher m, where arg is an instance of class
+Field(field_name, &class::field, m) // same as above with a better error message
+Key(e)                              // arg.first matches e (a value or a matcher)
+Pair(m1, m2)                        // arg is an std::pair; first and second matche m1 and m2
+FieldsAre(m...)                     // arg is a compatible object where each field matches piecewise with the matchers m...
+Property(&class::property, m)       // arg.property() const (or arg->property()) matches matcher m, where arg is an instance of class
+Property(prp_name, &class::prp, m)  // same as above with a better error message
+
+// ------- Matching the Result of a Function, Functor, or Callback
+ResultOf(f, m)                      // f(arg) matches matcher m, where f is a function or functor
+
+// ------- Pointer Matchers
+// for more on Pointer and Pointee, see: https://google.github.io/googletest/reference/matchers.html#pointer-matchers
+Address(m)              // the result of std::addressof(arg) matches m
+Pointee(m)              // arg (smart pointer or raw pointer) points to a value that matches matcher m
+Pointer(m)              // arg (smart pointer or raw pointer) contains a pointer that matches m
+WhenDynamicCastTo<T>(m) // when arg is passed through dynamic_cast<T>(), it matches matcher m
+
+// ------- Multi-argument Matchers
+Eq()                        // x == y
+Ge()                        // x >= y
+Gt()                        // x > y
+Le()                        // x <= y
+Lt()                        // x < y
+Ne()                        // x != y
+AllArgs(m)                  // equivalent to m; useful as syntactic sugar in .With(AllArgs(m))
+Args<N1, N2, ..., Nk>(m)    // tuple of the k selected (0-based indices) arguments matches m, e.g. Args<1, 2>(Eq())
+
+// ------- Composite Matchers
+AllOf(m1, m2, ..., mn)      // argument matches all of the matchers m1 to mn.
+AllOfArray({m0, ..., mn})   // same as AllOf() except that the matchers come from an initializer list ...
+AllOfArray(a_container)     // ... STL-style container ...
+AllOfArray(begin, end)      // ... iterator range ...
+AllOfArray(array)           // ... C-style array ...
+AllOfArray(array, count)    // ... C-style array
+
+AnyOf(m1, m2, ..., mn)      // argument matches at least one of the matchers m1 to mn.
+AnyOfArray({m0, ..., mn})   // The same as AnyOf() except that the matchers come from an initializer list ...
+AnyOfArray(a_container)     // ... STL-style container ...
+AnyOfArray(begin, end)      // ... iterator range ...
+AnyOfArray(array)           // ... C-style array ...
+AnyOfArray(array, count)    // ... C-style array
+
+Not(m)                      // argument doesn’t match matcher m
+Conditional(cond, m1, m2)   // matches matcher m1 if cond evaluates to true, else matches m2
+
+// ------- Adapters for Matchers
+MatcherCast<T>(m)       // casts matcher m to type Matcher<T>
+SafeMatcherCast<T>(m)   // safely casts matcher m to type Matcher<T>
+Truly(predicate)        // predicate(argument) returns something considered by C++ to be true; predicate is a function or functor
+
+
+// ------- Using Matchers as Predicates
+Matches(m)(val)                             // evaluates to true if val matches m; Matches(m) can be used alone as a unary functor
+ExplainMatchResult(m, val, result_listener) // evaluates to true if val matches m, explaining the result to result_listener
+Value(val, m)                               // evaluates to true if val matches m
+
+// ------- Defining Matchers
+MATCHER(IsEven, "") {       // defines a matcher IsEven() to match an even number
+    return (arg % 2) == 0;
+}
+MATCHER_P(IsDivisibleBy, n, "") {                                   // Defines a matcher IsDivisibleBy(n) to match a number divisible by n
+    *result_listener << "where the remainder is " << (arg % n);
+    return (arg % n) == 0;
+}
+MATCHER_P2(IsBetween, a, b, absl::StrCat(       // defines a matcher IsBetween(a, b) to match a value in the range [a, b]
+    negation ? "isn't" : "is", " between ", PrintToString(a), " and ", PrintToString(b)
+)) {
+    return a <= arg && arg <= b;
+}
