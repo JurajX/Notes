@@ -1,8 +1,6 @@
 // ========================== Google Test
 # include "gtest/gtest.h"
 
-
-
 // ========================== Cmake SetUp
 // NOTE: cmake comment starts with # not //
 
@@ -29,7 +27,6 @@ include(GoogleTest)                                     // include some test
 gtest_discover_tests(test)                              // automatic test discovery
 
 
-
 // ========================== Invoking the Tests
 //  - tests are registered automatically
 //  - if linked with gtest_main a suitable entry point is defined automatically; i.e. a main function
@@ -38,55 +35,179 @@ gtest_discover_tests(test)                              // automatic test discov
 
 RUN_ALL_TESTS()     // returns 0 if all pass, 1 otherwise; the return value cannot be ignored
 
-int main(int argc, char **argv) {               // basic main fct for testing
-    ::testing::InitGoogleTest(&argc, argv);     // parses and removes all recognised command line flags
+// alternative way to register global env; discouraged
+testing::Environment* const foo_env = testing::AddGlobalTestEnvironment(new FooEnvironment);
+
+int main(int argc, char **argv) {                               // basic main fct for testing
+    ::testing::InitGoogleTest(&argc, argv);                     // parses and removes all recognised command line flags
+    Environment* AddGlobalTestEnvironment(Environment* env);    // (optional) registers global env, see Global Set-Up and Tear-Down
     return RUN_ALL_TESTS();
 }
 
+// ------- Skipping test execution
+GTEST_SKIP()    // prevents further test execution; useful when checking for preconditions of the system under test, i.e. in SetUp()
+DISABLED_*      // add to front of a test or test suit; disables the test; it won't run, but is compiled
+
+// ------- Regular Expression Syntax
+// test suites with a name ending in “DeathTest” are run before all other tests
+// see: https://google.github.io/googletest/advanced.html#regular-expression-syntax
+
+// ------- Flags for main
+--gtest_list_tests              // prints all tests (grouped by test suits); no tests are run
+--gtest_filter="filter"         // runs only tests who's TestSuiteName.TestName matches the filter string;
+                                // ':'-sprtd list of positive patterns (optionally) followed by '-' and another ':'-list of negative patterns
+                                // test matches the filter iff it matches any of the positive and none of the negative patterns
+                                // https://google.github.io/googletest/advanced.html#running-a-subset-of-the-tests
+--gtest_fail_fast               // stops testing after first failure
+--gtest_also_run_disabled_tests // runs also disabled tests
+--gtest_repeat=N                // repeats the test N times
+--gtest_shuffle=1               // randomises order of test execution
+--gtest_random_seed=N           // seed for random test order; 0 means use dflt seed (current time)
+--gtest_color=yes|no|auto       // enables colour output
+--gtest_brief=1                 // prints only failures
+--gtest_print_time=0            // does not print the time it took to run a test
+--gtest_print_utf8=0            // supressed utf-8 printouts
+--gtest_output="json|xml:path"  // prints the results to json or xml output file
 
 
 // ========================== Fixtures
-
+// ------- Per-Test and Per-Suite Set-Up and Tear-Down
 class Fixture : public ::testing::Test {
- protected:
+public:                                 // Per-Suite part
+    // these methods can in general be protected; but in some cases (TEST_P) they must be public
+    // per-test-suite set-up, called before the first test in this test suite is created (before ctor and SetUp)
+    static void SetUpTestSuite() {
+        if (shrd_rsrc_ == nullptr) {    // check if initialised; fct might be called in subclasses of Fixture
+            shrd_rsrc_ = new ...;}
+    }
+
+    // per-test-suite tear-down, called after the last test in this test suite is destructed
+    static void TearDownTestSuite() {
+        delete shrd_rsrc_;
+        shrd_rsrc_ = nullptr;
+    }
+protected:                              // Per-Test part
     // ussage of ctor/dtor or SetUp/TearDown: https://google.github.io/googletest/faq.html#CtorVsSetUp
     //   - ctor/dtor are preferred; both cannot use ASSERT_xxx
     //   - ctor can't use virtual fct calls with dynamic dispatch (instead uses the fct associated with the object)
     //   - dtor can't throw
 
     // remove any or all of the following functions if their bodies would be empty
-    Fixture() {}                // you can do set-up work for each test here.
-    ~Fixture() override {}      // you can do clean-up work that doesn't throw exceptions here.
+    Fixture() {}                        // you can do set-up work for each test here.
+    ~Fixture() override {}              // you can do clean-up work that doesn't throw exceptions here.
 
     // if the constructor and destructor are not enough for setting up and cleaning up each test, you can define the following methods
-    void SetUp() override {}    // will be called immediately after the constructor (right before each test)
-    void TearDown() override {} // will be called immediately after each test (right before the destructor).
+    void SetUp() override {}            // will be called immediately after the constructor (right before each test)
+    void TearDown() override {}         // will be called immediately after each test (right before the destructor).
 
     // class members declared here can be used by all tests in the test suite
-    T data;                     // accessible from the test cases
+    T data;                             // accessible from the test cases
+    static T* shrd_rsrc_;               // test-suit shared resource; usually expensive to set-up
+    static inline shrd_rsrc1_ {...}     // test-suit shared resource; alternative set-up
+};
+T* FooTest::shrd_rsrc_ = nullptr;
+
+// ------- Global Set-Up and Tear-Down
+class Environment : public ::testing::Environment {     // this is registered in the main
+public:
+    ~Environment() override {}
+    void SetUp() override {}                            // defines how to set up the environment
+    void TearDown() override {}                         // defines how to tear down the environment; always called at the end of testing
 };
 
+// ------- Parametrised Fixtures
+// parameterised fixtures must inherit from both:
+//  - ::testing::WithParamInterface<T> (provides purely interface)
+//  - ::testing::Test (for fixture)
+// for convenience ::testing::TestWithParam<T> inherits from both of the above
+class ParamFixture : public testing::TestWithParam<T> {};   // T is the parameter type; rest as usual fixture
+// alternatively one can do
+class BaseFixture : public testing::Test {};
+class ParamFixture : public BaseTest, public ::testing::WithParamInterface<T> {};
+
+// ------- Typed(-Parametrised) Fixtures
+template <typename T>
+class TypedFixture : public testing::Test {
+public:
+    using List = std::list<T>;
+    static T shared_;
+    T value_;
+};
+// use the following for Typed Fixtures
+using MyTypes = ::testing::Types<char, int, unsigned int>;
+TYPED_TEST_SUITE(FooTest, MyTypes);
+// use the following for Typed-Parametrised Fixtures
+TYPED_TEST_SUITE_P(TypedFixture);
+
+
+// ========================== Parameter Generators
+testing::Values(val1, val2, ...);   // makes a parameter generator that can be fed to INSTANTIATE_TEST_SUITE_P
+testing::ValuesIn(cont);            // as above, but takes values from a container
+testing::Range(beg, end);           // generates values for parametrised tests in the range [beg, end)
+testing::Combine                    //
+
+
+// ========================== Name Generators
+// name generator is a fct taking testing::TestParamInfo<class ParamType>, and returning std::string
+testing::PrintToStringParamName();  // returns testing::PrintToString(GetParam()); does not work on std::string or C strings
 
 
 // ========================== Test Case
+// ------- Basic Test
 TEST(TestSuiteName, TestName) {         // standard test
     // test body
 }
 
+// ------- Test with Fixture
 TEST_F(TestFixtureName, TestName) {     // test with a fixture
     // test body
 }
 
+// ------- Parametrised Test
+TEST_P(ParamFixture, TestName) {        // test with a parametrised fixture; must be called in INSTANTIATE_TEST_SUITE_P
+    GetParam()                          // returns the parameter from the parametrised fixture
+    // test body
+}
+// the below macros must be places in the global or a namespace scope
+INSTANTIATE_TEST_SUITE_P(UniqueName, ParamFixture, ParamGen);           // see Parameter Generators, Parametrised Fixtures
+INSTANTIATE_TEST_SUITE_P(UniqueName, ParamFixture, ParamGen, NameGen);  // see Parameter Generators, Parametrised Fixtures
+
+// ------- Typed Test
+TYPED_TEST(TypedFixture, TestName) {
+    TypeParam n = this->value_;         // TypeParam is the param type; use 'this' to get members of TypedFixture (derived class template)
+    n += TestFixture::shared_;          // to get static members of the fixture, add the 'TestFixture::' prefix
+    typename TestFixture::List values;  // for typedefs of TypedFixture, add the 'TestFixture::' prefix; 'typename' required to satisfy compiler
+    values.push_back(n);
+}
+
+// ------- Type-Parameterized Tests
+// like typed (templated) tests except that one does not need to know the list of types ahead of time
+TYPED_TEST_P(TypedFixture, TestName) {
+    TypeParam n = 0;    // inside a test, refer to TypeParam to get the type parameter
+}
+REGISTER_TYPED_TEST_SUITE_P(TypedFixture, TestName, TestName2, ...);
+using MyTypes = ::testing::Types<T1, T2, T3>;
+INSTANTIATE_TYPED_TEST_SUITE_P(UniqueName, TypedFixture, MyTypes);
 
 
 // ========================== Assertions
 
-// fatal failure     -> aborts the current test case imediately, possibly skipping clean-up (can cause mem leaks)
-// non-fatal failure -> allows the current test case to continue running
+// fatal failure     -> aborts the current function imediately, possibly skipping clean-up (can cause mem leaks)
+// non-fatal failure -> allows the current function to continue running
 
 MACRO() << "msg1" << "msg2";    // a custom failure message for all types of macro
-ASSERT_*                    // generates a fatal failure
+ASSERT_*                    // generates a fatal failure; if in fct that is called in a test case, the test case continues
 EXPECT_*                    // generates a non-fatal failure
+
+
+// ------- Asserting on Subroutines
+ASSERT_NO_FATAL_FAILURE(stmnt)  // verifies that stmnt (e.g. function) doesn’t generate any new fatal failures in the current thread
+EXPECT_NO_FATAL_FAILURE(stmnt)  // verifies that stmnt (e.g. function) doesn’t generate any new fatal failures in the current thread
+
+// needs ::testing::Test:: prefix outside of TEST() , TEST_F() , or a test fixture
+HasFatalFailure()               // returns true if any assertion in the current test has suffered a fatal failure
+HasNonfatalFailure()            // returns true if any assertion in the current test has suffered a non-fatal failure
+HasFailure()                    // returns true if any assertion in the current test has suffered any fatal failure
 
 // ------- Explicit Success and Failure
 SUCCEED()                   // purely documentary (doesn’t generate any user-visible output)
@@ -123,9 +244,9 @@ ADD_FAILURE_AT(file, line)  // non-fatal failure at the file path and line numbe
     _PRED_FORMAT2(::testing::DoubleLE, val1, val2)      // verifies that val1 <= val2 (approximately equal)
 
 // ------- Exception Assertions
-    _THROW(stmnt, except_type)      // verifies that statement throws an exception of type exception_type
-    _ANY_THROW(stmnt)               // verifies that statement throws an exception of any type
-    _NO_THROW(stmnt)                // verifies that statement does not throw any exception
+    _THROW(stmnt, except_type)      // verifies that stmnt throws an exception of type exception_type
+    _ANY_THROW(stmnt)               // verifies that stmnt throws an exception of any type
+    _NO_THROW(stmnt)                // verifies that stmnt does not throw any exception
 
 // ------- Predicate Assertions
 // for overloaded predicates or a function template predicates explicitly specify the type of the function
@@ -135,10 +256,15 @@ ADD_FAILURE_AT(file, line)  // non-fatal failure at the file path and line numbe
 
 // ------- Death Assertions
     // complicated, see https://google.github.io/googletest/reference/assertions.html#death
-    _DEATH(stmnt, matcher)
-    _DEATH_IF_SUPPORTED(stmnt, matcher)
-    _DEBUG_DEATH(stmnt, matcher)
-    _EXIT(stmnt, pred, matcher)
+    //              and https://google.github.io/googletest/advanced.html#death-tests
+    // follow the convention of naming your test suite (not test) *DeathTest when it contains a death test
+    _DEATH(stmnt, matcher)              // stmnt terminates the process with a nonzero exit status, and produced stderr matches matcher
+    _DEATH_IF_SUPPORTED(stmnt, matcher) // same as above if death tests are supported
+    _DEBUG_DEATH(stmnt, matcher)        // same as _DEATH in debug mode
+    _EXIT(stmnt, pred, matcher)         // same as _DEATH but the exit status satisfies predicate
+
+// ------- Type Assertions
+::testing::StaticAssertTypeEq<T1, T2>() // generates compile time error if T1 and T2 are different; used inside template code
 
 // ------- Assertion Result
 testing::AssertionResult IsEven(int n) {
@@ -146,10 +272,6 @@ testing::AssertionResult IsEven(int n) {
   else return testing::AssertionFailure() << n << " is odd";    // test should fail
 }
 EXPECT_TRUE(IsEven(3));                                         // will fail with a nice message
-
-// ------- Type Assertions
-::testing::StaticAssertTypeEq<T1, T2>() // generates compile time error if T1 and T2 are different; used inside template code
-
 
 
 // ========================== Matchers
@@ -320,3 +442,32 @@ MATCHER_P2(IsBetween, a, b, absl::StrCat(       // defines a matcher IsBetween(a
 )) {
     return a <= arg && arg <= b;
 }
+
+
+
+// ========================== Additional Information
+
+// ------ Logging
+RecordProperty("key", val)      // outputs info to an XML file; val is either a string or an int; needs ::testing::Test:: outside of TEST
+
+// ------ Getting Current Test Name
+// gets information about the currently running test; does not work in SetUpTestSuite(), TearDownTestSuite()
+// Do NOT delete the returned object - it's managed by the UnitTest class.
+const testing::TestInfo* const test_info = testing::UnitTest::GetInstance()->current_test_info();
+test_info->name();
+test_info->test_suite_name());
+
+
+
+
+// ========================== Creating Value-Parameterized Abstract Tests
+// for more details, see: https://google.github.io/googletest/advanced.html#creating-value-parameterized-abstract-tests
+// Defining value-parameterized tests in a library is known as abstract testing. E.g. for an interface, you can write
+// a standard suite of abstract tests that all implementations of the interface are expected to pass. Each
+// implementation then can instantiate the test suite.
+
+// To define abstract tests, one should organize code like this:
+//  - put the definition of the parameterized test fixture class in a header file
+//  - put the TEST_P definitions in a cpp file that includes the above header
+//  - instantiate the tests by including the header file, invoking INSTANTIATE_TEST_SUITE_P(), and linking to
+//    the library target containing the cpp file
