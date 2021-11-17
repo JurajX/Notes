@@ -8,11 +8,11 @@ include(CTest)                                          // this has to be in the
 
 add_executable( test "test.cpp" )
 set_target_properties( test PROPERTIES CXX_STANDARD 20 )
-// ------ option one
+// ... option one
 find_package( GTest REQUIRED )                          // makes troubles if gtest was compiled with different compiler
 target_link_libraries( test PUBLIC GTest::gtest )       // link one or the other more ...
 target_link_libraries( test PUBLIC GTest::gtest_main )  //  ... in Invoking the Tests part
-// ------ option two
+// ... option two
 include(FetchContent)                                   // fetches and compiles gtest
 FetchContent_Declare(
     googletest
@@ -22,7 +22,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 target_link_libraries( test PUBLIC gtest )              // link one or the other more ...
 target_link_libraries( test PUBLIC gtest_main )         //  ... in Invoking the Tests part
-// ------ option end
+// ... option end
 include(GoogleTest)                                     // include some test
 gtest_discover_tests(test)                              // automatic test discovery
 
@@ -45,7 +45,9 @@ int main(int argc, char **argv) {                               // basic main fc
 }
 
 // ------- Skipping test execution
-GTEST_SKIP()    // prevents further test execution; useful when checking for preconditions of the system under test, i.e. in SetUp()
+GTEST_SKIP()    // prevents further test execution at runtime; if it is in the
+                //  - global test env SetUp() -> skips all tests from the test program
+                //  - test fixture SetUp() -> skips all tests from the test suit
 DISABLED_*      // add to front of a test or test suit; disables the test; it won't run, but is compiled
 
 // ------- Regular Expression Syntax
@@ -133,23 +135,11 @@ public:
     static T shared_;
     T value_;
 };
-// use the following for Typed Fixtures
-using MyTypes = ::testing::Types<char, int, unsigned int>;
+// ... Typed Fixtures (one must know all the types beforehand)
+using MyTypes = ::testing::Types<T1, T2, T3>;   // necessary for correct parsing in TYPED_TEST_SUITE
 TYPED_TEST_SUITE(FooTest, MyTypes);
-// use the following for Typed-Parametrised Fixtures
+// ... Typed-Parametrised Fixtures (types are defined later)
 TYPED_TEST_SUITE_P(TypedFixture);
-
-
-// ========================== Parameter Generators
-testing::Values(val1, val2, ...);   // makes a parameter generator that can be fed to INSTANTIATE_TEST_SUITE_P
-testing::ValuesIn(cont);            // as above, but takes values from a container
-testing::Range(beg, end);           // generates values for parametrised tests in the range [beg, end)
-testing::Combine                    //
-
-
-// ========================== Name Generators
-// name generator is a fct taking testing::TestParamInfo<class ParamType>, and returning std::string
-testing::PrintToStringParamName();  // returns testing::PrintToString(GetParam()); does not work on std::string or C strings
 
 
 // ========================== Test Case
@@ -175,19 +165,31 @@ INSTANTIATE_TEST_SUITE_P(UniqueName, ParamFixture, ParamGen, NameGen);  // see P
 // ------- Typed Test
 TYPED_TEST(TypedFixture, TestName) {
     TypeParam n = this->value_;         // TypeParam is the param type; use 'this' to get members of TypedFixture (derived class template)
-    n += TestFixture::shared_;          // to get static members of the fixture, add the 'TestFixture::' prefix
-    typename TestFixture::List values;  // for typedefs of TypedFixture, add the 'TestFixture::' prefix; 'typename' required to satisfy compiler
+    n += TestFixture::shared_;          // to get static members of the TypedFixture, add the 'TestFixture::' prefix
+    typename TestFixture::List values;  // for using/typedefs in TypedFixture prefix 'TestFixture::'; 'typename' required for compiler
     values.push_back(n);
 }
 
 // ------- Type-Parameterized Tests
-// like typed (templated) tests except that one does not need to know the list of types ahead of time
+// like typed tests except that one does not need to know the list of types ahead of time
 TYPED_TEST_P(TypedFixture, TestName) {
-    TypeParam n = 0;    // inside a test, refer to TypeParam to get the type parameter
+    // TypeParam, TestFixture::, and typename work the same as in TYPED_TEST
 }
 REGISTER_TYPED_TEST_SUITE_P(TypedFixture, TestName, TestName2, ...);
-using MyTypes = ::testing::Types<T1, T2, T3>;
+using MyTypes = ::testing::Types<T1, T2, T3>;   // necessary for correct parsing in TYPED_TEST_SUITE
 INSTANTIATE_TYPED_TEST_SUITE_P(UniqueName, TypedFixture, MyTypes);
+
+// ------- Parameter Generators
+testing::Values(val1, val2, ...);   // yields ParamGen with the values
+testing::ValuesIn(cont);            // as above, but takes values from a container
+testing::ValuesIn(begin, end);      // as above, but takes values from the iterators [beg, end)
+testing::Range(beg, end [, step]);  // yields ParamGen with in the range [beg, end); dflt step = 1
+testing::Bool()                     // yields sequence {false, true}
+testing::Combine(gen1, ..., genN);  // yields std::tuple N-tuples of cartesian product of values returned by the generators
+
+// ------- Name Generators
+// name generator is a fct taking (const ref) testing::TestParamInfo<class ParamType>, and returning std::string
+testing::PrintToStringParamName();  // returns testing::PrintToString(GetParam()); does not work on std::string or C strings
 
 
 // ========================== Assertions
@@ -205,9 +207,10 @@ ASSERT_NO_FATAL_FAILURE(stmnt)  // verifies that stmnt (e.g. function) doesn’t
 EXPECT_NO_FATAL_FAILURE(stmnt)  // verifies that stmnt (e.g. function) doesn’t generate any new fatal failures in the current thread
 
 // needs ::testing::Test:: prefix outside of TEST() , TEST_F() , or a test fixture
-HasFatalFailure()               // returns true if any assertion in the current test has suffered a fatal failure
-HasNonfatalFailure()            // returns true if any assertion in the current test has suffered a non-fatal failure
-HasFailure()                    // returns true if any assertion in the current test has suffered any fatal failure
+HasFatalFailure()               // returns true iff any assertion in the current test has suffered a fatal failure
+HasNonfatalFailure()            // returns true iff any assertion in the current test has suffered a non-fatal failure
+HasFailure()                    // returns true iff any assertion in the current test has suffered any fatal failure
+IsSkipped()                     // returns true iff the current test was skipped
 
 // ------- Explicit Success and Failure
 SUCCEED()                   // purely documentary (doesn’t generate any user-visible output)
@@ -262,16 +265,6 @@ ADD_FAILURE_AT(file, line)  // non-fatal failure at the file path and line numbe
     _DEATH_IF_SUPPORTED(stmnt, matcher) // same as above if death tests are supported
     _DEBUG_DEATH(stmnt, matcher)        // same as _DEATH in debug mode
     _EXIT(stmnt, pred, matcher)         // same as _DEATH but the exit status satisfies predicate
-
-// ------- Type Assertions
-::testing::StaticAssertTypeEq<T1, T2>() // generates compile time error if T1 and T2 are different; used inside template code
-
-// ------- Assertion Result
-testing::AssertionResult IsEven(int n) {
-  if ((n % 2) == 0) return testing::AssertionSuccess();         // test should succees
-  else return testing::AssertionFailure() << n << " is odd";    // test should fail
-}
-EXPECT_TRUE(IsEven(3));                                         // will fail with a nice message
 
 
 // ========================== Matchers
@@ -444,13 +437,12 @@ MATCHER_P2(IsBetween, a, b, absl::StrCat(       // defines a matcher IsBetween(a
 }
 
 
-
 // ========================== Additional Information
 
-// ------ Logging
+// ------- Logging
 RecordProperty("key", val)      // outputs info to an XML file; val is either a string or an int; needs ::testing::Test:: outside of TEST
 
-// ------ Getting Current Test Name
+// ------- Getting Current Test Name
 // gets information about the currently running test; does not work in SetUpTestSuite(), TearDownTestSuite()
 // Do NOT delete the returned object - it's managed by the UnitTest class.
 const testing::TestInfo* const test_info = testing::UnitTest::GetInstance()->current_test_info();
@@ -458,6 +450,43 @@ test_info->name();
 test_info->test_suite_name());
 
 
+// ========================== Classes and Types
+// ------- Assertion Result
+testing::AssertionResult IsEven(int n) {
+  if ((n % 2) == 0) return testing::AssertionSuccess();         // test should succees
+  else return testing::AssertionFailure() << n << " is odd";    // test should fail
+}
+EXPECT_TRUE(IsEven(3));                                         // will fail with a nice message
+
+// ------- Type Assertions
+::testing::StaticAssertTypeEq<T1, T2>() // generates compile time error if T1 and T2 are different; used inside template code
+
+// ------- Miscellaneous Classes
+::testing::AssertionException
+::testing::Environment              // see, Fixtures - Global Set-Up and Tear-Down
+::testing::ScopedTrace
+::testing::Test                     // see, Fixtures - Per-Test and Per-Suite Set-Up and Tear-Down
+::testing::TestWithParam<T>         // see, Fixtures - Parametrised Fixtures
+::testing::TestInfo
+::testing::TestParamInfo<T>
+::testing::UnitTest
+::testing::EmptyTestEventListener
+::testing::TestEventListener
+::testing::TestEventListeners
+::testing::TestPartResult
+::testing::TestProperty
+::testing::TestResult
+::testing::TimeInMillis
+::testing::Types<T...>
+::testing::WithParamInterface<T>
+::testing::AddGlobalTestEnvironment
+
+// ------- Miscellaneous Functions
+::testing::AssertionSuccess()                               // see, Classes and Types - Assertion Result
+::testing::AssertionFailure()                               // see, Classes and Types - Assertion Result
+::testing::StaticAssertTypeEq<T1, T2>()                     // see, Classes and Types - Type Assertions
+std::string ::testing::PrintToString(x)                     // see, Matchers - Defining Matchers
+::testing::PrintToStringParamName(TestParamInfo<T>& info)   // see, Test Case - Name Generators
 
 
 // ========================== Creating Value-Parameterized Abstract Tests
