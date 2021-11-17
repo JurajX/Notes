@@ -2,7 +2,7 @@
 
 # ---------- ECMAScript
 #  special characters, to match them one needs to escape them (e.g. \^); all other characters match themselves;
-^ $     #  anchors; matche the position (immediately following/of) a line termination char; ^test$ -> matches exactly "test\n"
+^ $     #  anchors; match the position (immediately following/of) a line termination char; ^test$ -> matches exactly "test\n"
 .       #  wildcard; matches any one char;
 |       #  alternation; a|b -> matches a or b
 ()      #  capture groups; (.)(ab|cd)(.) on 1cd4 returns these groups 1cd4, 1, cd, 4;
