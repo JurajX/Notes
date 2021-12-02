@@ -785,7 +785,7 @@ X::~X() {...;}                      // destructor definition; delete all heap me
 void X::sFct() {...;}               // definition of the static method
 void X::SetValue(int v) {...;}      // definition of a member function
 void X::SetValue1(int v) {...;}     // with default
-int X::Get1() const {...;}          // the const keyword if required in the definition as well
+int X::Get1() const {...;}          // the const keyword is required in the definition as well
 
 
 //---------- Friend Functions and Classes
