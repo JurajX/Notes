@@ -62,27 +62,28 @@
 // ========================== Cmake SetUp
 // NOTE: cmake comment starts with # not //
 
-include(CTest)                                          // this has to be in the top-most (project) CMakeLists.txt
+include( CTest )                                        # this has to be in the top-most (project) CMakeLists.txt
 
 add_executable( test "test.cpp" )
-set_target_properties( test PROPERTIES CXX_STANDARD 20 )
-// ... option one
-find_package( GTest REQUIRED )                          // makes troubles if gtest was compiled with different compiler
-target_link_libraries( test PUBLIC GTest::gtest )       // link one or the other more ...
-target_link_libraries( test PUBLIC GTest::gtest_main )  //  ... in Invoking the Tests part
-// ... option two
-include(FetchContent)                                   // fetches and compiles gtest
+target_compile_features( test PUBLIC cxx_std_20 )
+set_target_properties( test PROPERTIES CXX_EXTENSIONS OFF )
+# ... option one
+find_package( GTest REQUIRED )                          # makes troubles if gtest was compiled with different compiler
+target_link_libraries( test PUBLIC GTest::gtest )       # link one or the other more ...
+target_link_libraries( test PUBLIC GTest::gtest_main )  #  ... in Invoking the Tests part
+# ... option two
+include(FetchContent)                                   # fetches and compiles gtest
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+    URL "https:github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip"
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-target_link_libraries( test PUBLIC gtest )              // link one or the other more ...
-target_link_libraries( test PUBLIC gtest_main )         //  ... in Invoking the Tests part
-// ... option end
-include(GoogleTest)                                     // include some test
-gtest_discover_tests(test)                              // automatic test discovery
+target_link_libraries( test PUBLIC gtest )              # link one or the other more ...
+target_link_libraries( test PUBLIC gtest_main )         #  ... in Invoking the Tests part
+# ... option end
+include(GoogleTest)                                     # include some test
+gtest_discover_tests(test)                              # automatic test discovery
 
 
 // ========================== Invoking the Tests
