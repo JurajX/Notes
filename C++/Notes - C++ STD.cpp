@@ -1109,7 +1109,7 @@ myPair.first; myPair.second;            // accesses the first and second data me
 //---------- tuple
 // can be used to implement lexicographical compare for classes: auto op<=>(const T& rhs) { return tie(m_1, m_2) <=> tie(rhs.m_1, rhs.m_2); }
 tuple<T, E, R> tup;                     // declaration of a tuple storing 3 different types; iterating over the values is not easy
-typle tup { 1, 1.1, "srt"s };           // defines a tuple<int, double, string> using CTAD (class template argument deduction)
+tuple tup { 1, 1.1, "srt"s };           // defines a tuple<int, double, string> using CTAD (class template argument deduction)
 auto tup { make_tuple(1, 1.1, "srt"s) };// as above; not necessary thanks to CTAD
 tuple tup { 1, ref(i), cref(i) };       // defines a tuple<int, int&, const int&>; i is an int; ref(), cref() in <functional>
 auto tup { tuple_cat(t1, t2) };         // concatinates two tuples t1 and t2 into one tuple tup
