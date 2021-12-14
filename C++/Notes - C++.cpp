@@ -778,8 +778,8 @@ X::X(int x) {...;}              // explicit constructor definition, do not repea
 
 X::X(const X &x) {...;}             // copy constructor definition,   copy all memory (non-heap and heap) from src to dst
 X& X::operator=(const X &x) {...;}  // copy assignment definition,    copy all memory (non-heap and heap) from src to dst (check sizes for heap)
-X::X(const X &&x) {...;}            // move constructor declaration, steal all memory (non-heap and heap) from src and leave it with nullptrs
-X& X::operator=(const X &&x) {...;} // move assignment definition,    swap all memory (non-heap and heap) between src and dst
+X::X(X &&x) noexcept {...;}         // move constructor declaration, steal all memory (non-heap and heap) from src and leave it with nullptrs
+X& X::operator=(X &&x) noexcept {}  // move assignment definition,    swap all memory (non-heap and heap) between src and dst
 X::~X() {...;}                      // destructor definition; delete all heap memory
 
 void X::sFct() {...;}               // definition of the static method
