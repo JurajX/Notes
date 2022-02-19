@@ -731,7 +731,7 @@ private:                        // only members can access (default)
     mutable int x1              // modifiable even in a const instance of the class or by const method, e.g. 'Get1() const' can change this
     static int s_data;          // static data member, only one for all instances
     static inline int s_i { 0 };// inline static data member, no need to initialise the static member (as opposed to s_data); c++17
-    static cont int s_max { 9 };// const static data member, can be initialised in the class declaration
+    static const int s_ma { 9 };// const static data member, can be initialised in the class declaration
     static X dflt;              // as above; the X (class's) type can be used as a default for constructor, static member fct can set it
 protected:                      // only members, friends, derived classes (with public or protected access).
 public:                         // everyone can access
