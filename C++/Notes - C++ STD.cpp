@@ -838,6 +838,7 @@ srcl.function_name()        // returns the name of the function represented by s
 //################################################## TYPE & TYPE CHECKS
 
 //==================== concepts c++20
+// see also "Notes - C++.cpp" -> Templates -> Concepts c++20
 #include <concepts>
 same_as, derived_from, convertible_to, integral, floating_point, copy_constructible     // core language concepts
 equality_comparable, totally_ordered                                                    // comparison concepts
