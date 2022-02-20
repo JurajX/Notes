@@ -1063,7 +1063,7 @@ Vector<T>::Vector() {...;}                  // definition of a member function (
 Vector::Vector() {...;}                     // same as above, only valid in the class definition (outside of the class <T> is required)
 
 template <typename T> template <typename E> // cannot be combined into template <typename T, typename E>; usually put on 2 lines
-Vector<T>::Vector(const Vector<E>& src)     // copy constructor for template class between different template typas; e.g. T=double; E=int
+Vector<T>::Vector(const Vector<E>& src)     // copy constructor for template class between different template types; e.g. T=double; E=int
 
 explicit TmpltName(Params) -> ShouldBe;     // template deduction rules; explicit is optional
 Vector(const char*) -> Vector<string>;      // example of the above
