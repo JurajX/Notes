@@ -181,14 +181,14 @@ public:
 //  - ::testing::WithParamInterface<T> (provides purely interface)
 //  - ::testing::Test (for fixture)
 // for convenience ::testing::TestWithParam<T> inherits from both of the above
-class ParamFixture : public testing::TestWithParam<T> {};   // T is the parameter type; rest as usual fixture
+class ParamFixture : public ::testing::TestWithParam<T> {};   // T is the parameter type; rest as usual fixture
 // alternatively one can do
-class BaseFixture : public testing::Test {};
+class BaseFixture : public ::testing::Test {};
 class ParamFixture : public BaseTest, public ::testing::WithParamInterface<T> {};
 
 // ------- Typed(-Parametrised) Fixtures
 template <typename T>
-class TypedFixture : public testing::Test {
+class TypedFixture : public ::testing::Test {
 public:
     using List = std::list<T>;
     static T shared_;
