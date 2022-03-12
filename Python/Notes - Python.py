@@ -54,20 +54,20 @@ import PIL
 
 # ========== COMMENTS ==========
 # Coment                    # is a simple comment
-'''Multiline comment'''    # is a multiline comment
-"""Docstring comment"""    # is a docstring comment
+'''Multiline comment'''     # is a multiline comment
+"""Docstring comment"""     # is a docstring comment
 
 # ========== TYPES ==========
 # int, float, bool          # integers, floats, boolean variables
 # NoneType                  # special, has only one value None
-type(var)          # r: type of var
-int(var)           # cast operation to int
-float(var)         # cast operation to float
-bool(var)          # cast operation to bool
-str(var)           # cast operation to str (string)
-list(range(5))     # cast range into list, i.e. [0, 1, 2, 3, 4]
-tulpe(lst)         # cast list into tuple
-set(lst)           # cast list into set
+type(var)                   # r: type of var
+int(var)                    # cast operation to int
+float(var)                  # cast operation to float
+bool(var)                   # cast operation to bool
+str(var)                    # cast operation to str (string)
+list(range(5))              # cast range into list, i.e. [0, 1, 2, 3, 4]
+tulpe(lst)                  # cast list into tuple
+set(lst)                    # cast list into set
 
 # ========== NUMERICAL OPERATORS ==========
 # + - * /                   # addition, subtraction, multiplication, division
@@ -93,60 +93,65 @@ else:          # else
     pass
 
 # ========== LOOPS ==========
-for i in range(5):     # loops i over [0,1,2,3,4]
+for i in range(5):  # loops i over [0,1,2,3,4]
     if COND1:
-        break          # breaks any loop instantly
-    continue           # returns at the beginning of the loop
-else:                  # executed at the end if brake was not hit, 'no break' statement
+        break       # breaks any loop instantly
+    continue        # returns at the beginning of the loop
+else:               # executed at the end of the for loop, if brake (or return) was not hit; i.e. 'no break' statement
     pass
 
-while COND1:   # executes code as long as the condition is true
+while COND1:        # executes code as long as the condition is true
     if COND2:
         break
-    else:      # executed at the end if brake was not hit, 'no break' statement
-        pass
+else:               # executed at the end of the while loop, if brake (or return) was not hit; i.e. 'no break' statement
+    pass
 
 # ========== STRINGS ==========
 # strings are immutable
 subs, s, = 'str', 'string'
-'\t', '\n'         # tabulator and new line in strings
-s.expandtabs(N)    # sets \t size to N spaces, dflt=8
-s.title()          # r: a copy of string with first letters capitalised
-s.upper()          # r: a copy of string with all letters capitalised
-s.lower()          # r: a copy of string with all letters lower case
+LoS = ['s1', 's2', 's3']
+'\t', '\n'              # tabulator and new line in strings
+s.expandtabs(N)         # sets \t size to N spaces, dflt=8
+s.title()               # r: a copy of string with first letters capitalised
+s.upper()               # r: a copy of string with all letters capitalised
+s.lower()               # r: a copy of string with all letters lower case
 
-s.lstrip(), s.rstrip()     # deletes spaces (or content in brackets) from left, right or...
-s.strip()                  # ...from both sides
+s.lstrip(), s.rstrip()  # deletes spaces (or content in brackets) from left, right or...
+s.strip()               # ...from both sides
 
-subs in s              # r: True if substr is somewhere in str
-s.replace('s1', 's2')  # r: a copy of s where all substrs 's1' are replaced by 's2'
-s.split(subs)          # split s into words on substring subs (dflt subs=' ')
-subs.join(LoS)         # join lst of strings on a given substring, i.e LoS[0]+subs+Los[1]+subs+...
-s.index(subs)          # r: 1st idx of 1st occurrence of subs or raises an error
-s.find(subs)           # r: 1st idx of 1st occurrence of subs, -1 if not found
-s.count(subs)          # counts the occurrence of the given substring in s
-s.endswith('.jpg')     # r: True if s ends with '.jpg', false otherwise
+subs in s               # r: True if substr is somewhere in str
+s.replace('s1', 's2')   # r: a copy of s where all substrs 's1' are replaced by 's2'
+s.split(subs)           # split s into words on substring subs (dflt subs=' ')
+subs.join(LoS)          # join lst of strings on a given substring, i.e LoS[0]+subs+LoS[1]+subs+...
+s.index(subs)           # r: 1st idx of 1st occurrence of subs or raises an error
+s.find(subs)            # r: 1st idx of 1st occurrence of subs, -1 if not found
+s.count(subs)           # counts the occurrence of the given substring in s
+s.endswith('.jpg')      # r: True if s ends with '.jpg', false otherwise
 
-s[start:stop:step]     # r: slice of the string, if step < 0 reverse the order
-s[-1]                  # r: returns the last element
+s[start:stop:step]      # r: slice of the string, if step < 0 reverse the order
+s[-1]                   # r: returns the last element
 
-for ch in s:   # loop over the string's letters
+for ch in s:            # loop over the string's letters
     pass
 
-'Printing {} numbers'.format(3)
-'{0} {1} /{0}'.format('tag', 'text')   # prints "tag text /tag"
-'{name}, {age}'.format(name='J', age=18)
-'{0[name]},{0[age]}'.format(person)    # person is dict with keys name and age
-'{name}, {age}'.format(**person)       # person is dict with keys name and age
-'{0.name},{0.age}'.format(person)      # person is class with attr name and age
+'Printing {} numbers'.format(3)             # r: "Printing 3 numbers"
+'{0} {1} /{0}'.format('tag', 'text')        # r: "tag text /tag"
+'{name}, {age}'.format(name='J', age=18)    # r: "J, 18"
+person = {'name': 'J', 'age': 18}
+'{0[name]}, {0[age]}'.format(person)        # r: "J, 18"
+'{name}, {age}'.format(**person)            # r: "J, 18"
+'{0.name}, {0.age}'.format(p_cls)           # ...as above; p_cls is class with attr name and age
 
-'{:0X}'.format(number)     # pads with zero to X characters
-'{:.Xf}'.format(number)    # prints up to X decimal places
-'{:,}'.format(number)      # separates thousands by commas
+pi_di = 314
+'{:05,}'.format(pi_di)  # r: '03141'
+'{:,}'.format(pi_di)    # r: '3,141'
+'{:07,}'.format(pi_di)  # r: '003,141'
+pi = 3.14159265359
+'{:.Xf}'.format(pi)     # r: '3.14159'
 
-# f-strings work exactly as '.format(...)', including number padding etc.
-f'args: {args}'    # f-string, variables can be directly placed inside
-f'{var:,}'         # f-string, formatting works as above (thousand separator)
+# f-strings work exactly as '.format(...)', including number padding etc.;
+f'pi: {pi_di}'          # r: 'pi: 3141'; variables can be directly placed inside
+f'{pi_di:,}'            # r: '3,141'; formatting works as above (thousand separator)
 
 # ========== RANGES ==========
 range(10)          # stop at 10 non-inclusive; i.e. 0,1,...,9
@@ -154,59 +159,62 @@ range(1, 5)        # start=1, stop=5; i.e. 1, 2, 3, 4
 range(2, 11, 2)    # start=2, stop=11, step=2; i.e. 2, 4, 6, 8, 10
 
 # ========== LISTS ==========
-# lists are not hashable!
-lst = [1, 2, 3]                # definition of a list with numbers
-lst[0], lst[-1]                # r: first and last elements respectively
-lst[1:3]                       # r: a slice of lst containing second and third element
-lst[:3], lst[1:], lst[-3:]     # equiv. to lst[0:3] lst[1:-1] lst[-3:len(lst)]
-lst1 = lst[:]                  # copies the whole lst to a new l1; [:] can't be omitted
-lst1 = lst                     # creates an alias lst1 for lst (refers to the same memory)
+# lists are not hashable, because they are mutable!
+lst = [1, 2, 3]             # definition of a list with numbers
+lst[0], lst[-1]             # r: the first and the last elements, respectively
+lst[1:3]                    # r: a slice of lst containing second (idx=1) and third (idx=2) elements
+lst[:3], lst[1:], lst[-3:]  # equiv. to lst[0:3], lst[1:len(lst)], lst[len(lst)-3:len(lst)]
+lst1 = lst[:]               # copies the whole lst to a new l1; [:] can't be omitted (else a reference is created)
+lst1 = lst                  # creates a reference lst1 for lst (refers to the same memory)
 
-del lst[i]     # deletes the i-th element from the lst
+del lst[i]              # deletes the i-th element from the lst; or IndexError if out of range
 
-lst.append(4)          # appends 4 at the end of lst
-lst.extend(lst1)       # appends a copy of lst1 to the end of lst
-lst.insert(i, 'num')   # inserts 'num' at the i-th pos. and shifts the others
-lst.pop(i)             # deletes i-th (or the last element if i not given) and returns it
-lst.remove('val')      # removes the first occurrence of 'val'
-lst.sort(              # sorts lst in place
-    key=abs,           # ...fct applied to elements before sorting
-    reverse=True)
-lst.reverse()          # reverses the order of elements
-lst.index('val')       # r: index of first occurrence of 'val' in lst, or ValueError
-lst.count('val')       # r: number of occurrences of 'val' in lst
+lst.append(4)           # appends 4 at the end of lst
+lst.extend(lst1)        # appends a copy of lst1 to the end of lst
+lst.insert(i, 'num')    # inserts 'num' at the i-th pos. and shifts the others
+lst.pop(i)              # deletes i-th (or the last element if i not given) and returns it
+lst.remove('val')       # removes the first occurrence of 'val'; or ValueError if 'val' not in the list
+lst.sort(               # sorts lst in place
+    key=abs,            # ...fct applied to elements before sorting; does not change the elements
+    reverse=True)       # ... if reverse the order
+lst.reverse()           # reverses the order of elements in place
+lst.index('val')        # r: index of first occurrence of 'val' in lst, or ValueError if 'val' not in the list
+lst.count('val')        # r: number of occurrences of 'val' in lst
 
-sorted(lst)            # r: a copy of sorted lst
-sorted(lst, key=abs)   # r: a copy of sorted lst, applies abs fct to the elements before sorting
-len(lst)               # r: the length of list (i.e. the number of elements)
-min(lst), max(lst)     # r: the lowest / highest value in lst
-sum(lst)               # r: a sum of the values in lst (only for numbers)
+sorted(lst)             # r: a copy of sorted lst
+sorted(lst, key=abs)    # r: a copy of sorted lst, applies abs fct to the elements before sorting (does not change the elements)
+len(lst)                # r: the length of list (i.e. the number of elements)
+min(lst), max(lst)      # r: the lowest / highest value in lst
+sum(lst)                # r: a sum of the values in lst (only for numbers)
 
-'val' in lst       # r: True if 'val' is in the lst, False if not
-'val' not in lst   # r: False if 'val' is in the lst, True if not
+'val' in lst            # r: True if 'val' is in the lst, False otherwise
+'val' not in lst        # r: True if 'val' is not in the lst, False otherwise
 
-while 'itm' in lst:    # 3 lines above
+while 'itm' in lst:     # loops untill 'itm' is no longer in the list
     pass
-while lst:             # equiv. to while len(lst) != 0:
+while lst:              # equiv. to while len(lst) != 0:
     pass
 
-if lst:    # equiv. to if len(lst) != 0
+if lst:                 # equiv. to if len(lst) != 0
     pass
 
 for item in lst:               # loops through lst
     pass
-for item in lst[:3]:           # loops through first three elements
+for item in lst[:3]:           # loops through the first three elements
     pass
 for i, itm in enumerate(lst):  # loops through lst; itm = lst[i]
     pass
 
-[j**2 for j in range(1, 8)]                    # returns [1, 4, 9, 16, 25, 36, 49]
-[j**2 for j in range(1, 8) if j != 3]          # as above but omits 3*3 = 9
-[j**2 if j != 3 else 33 for j in range(1, 8)]  # as above but instead of 3*3 = 9 returns 33
-[(a, b) for a in range(3) for b in range(3)]   # returns all 9 combination of a,b
+[j**2 for j in range(1, 8)]                    # r: [1, 4, 9,  16, 25, 36, 49]
+[j**2 for j in range(1, 8) if j != 3]          # r: [1, 4,     16, 25, 36, 49]
+[j**2 if j != 3 else 33 for j in range(1, 8)]  # r: [1, 4, 33, 16, 25, 36, 49]
+[(a, b) for a in range(3) for b in range(3)]   # r: [(0, 0), (0, 1), (1, 0), (1, 1)]; i.e. all combination of a,b
 
 # ========== TUPLES ==========
-# indexing works exactly the same way as in lists
+#  - are just an immutable list;
+#  - are hashable;
+#  - indexing works exactly the same way as in lists
+
 t = (1, 2, 3)  # a tuple (an immutable list), access elements using []
 t = (1, )      # a tuple of one element; comma can't be ommited
 t = (1)        # t is now an int
