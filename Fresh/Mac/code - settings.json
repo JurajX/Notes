@@ -1,0 +1,219 @@
+{
+    "diffEditor.codeLens": true,
+    "telemetry.telemetryLevel": "off",
+    "better-comments.highlightPlainText": true,
+    "window.restoreFullscreen": true,
+    "markdown.preview.fontSize": 16,
+
+    "editor.fontSize": 17,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.renderWhitespace": "all",
+    "editor.definitionLinkOpensInPeek": true,
+    "editor.renderControlCharacters": true,
+    "editor.accessibilitySupport": "off",
+    "editor.wordWrapColumn": 150,
+    "editor.minimap.maxColumn": 60,
+    "editor.mouseWheelScrollSensitivity": 2,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.find.addExtraSpaceOnTop": false,
+    "editor.minimap.showSlider": "always",
+    "editor.autoIndent": "advanced",
+    "editor.glyphMargin": false,
+    "editor.guides.bracketPairs": true,
+    "editor.guides.bracketPairsHorizontal": false,
+    "editor.scrollbar.verticalScrollbarSize": 10,
+    "editor.scrollBeyondLastColumn": 0,
+    "editor.showFoldingControls": "always",
+    "editor.unfoldOnClickAfterEndOfLine": true,
+    "editor.find.cursorMoveOnType": false,
+    "editor.suggest.localityBonus": true,
+    "editor.suggest.preview": true,
+    "editor.bracketPairColorization.enabled": false,
+
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.incrementalNaming": "smart",
+
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "files.exclude": {
+        "build/*": true
+    },
+
+    "git.confirmSync": false,
+    "gitlens.blame.heatmap.location": "left",
+    "gitlens.keymap": "alternate",
+    "gitlens.codeLens.enabled": false,
+    "gitlens.showWelcomeOnInstall": false,
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "github.gitProtocol": "ssh",
+    "githubPullRequests.defaultMergeMethod": "squash",
+
+    "security.workspace.trust.untrustedFiles": "open",
+
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/Users/juraj/.venv/linters/bin/flake8",
+    "python.linting.flake8Args": [
+        "--max-line-length=150"
+    ],
+    "python.formatting.provider": "yapf",
+    "python.formatting.yapfPath": "/Users/juraj/.venv/linters/bin/yapf",
+    "python.formatting.yapfArgs": [
+        "--style={based_on_style: pep8, column_limit: 150, join_multiple_lines: false, split_penalty_after_opening_bracket: 150, split_penalty_excess_character: 25000, split_penalty_for_added_line_split : 150}"
+    ],
+
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/gcc/Release/compile_commands.json",
+    "C_Cpp.clang_format_fallbackStyle": "none",
+    "C_Cpp.codeAnalysis.runAutomatically": false,
+    "C_Cpp.debugShortcut": false,
+    "C_Cpp.loggingLevel": "Debug",
+    "C_Cpp.vcFormat.newLine.beforeCatch": false,
+    "C_Cpp.vcFormat.newLine.beforeElse": false,
+    "C_Cpp.vcFormat.space.afterComma": false,
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "C_Cpp.intelliSenseMemoryLimit": 256,
+    "C_Cpp.workspaceParsingPriority": "low",
+    "C_Cpp.maxCachedProcesses": 1,
+    "C_Cpp.maxConcurrentThreads": 1,
+    "C_Cpp.maxMemory": 256,
+    "C_Cpp.references.maxConcurrentThreads": 1,
+    "C_Cpp.references.maxMemory": 256,
+    "C_Cpp.clang_format_path": "/usr/local/opt/llvm/bin/clang-format",
+    "C_Cpp.intelliSenseCacheSize": 0,
+    "C_Cpp.vcFormat.indent.caseContents": false,
+    "C_Cpp.vcFormat.indent.lambdaBracesWhenParameter": false,
+    "C_Cpp.vcFormat.indent.preprocessor": "none",
+    "C_Cpp.vcpkg.enabled": false,
+    "C_Cpp.enhancedColorization": "Enabled",
+
+    "doxdocgen.generic.commandSuggestionAddPrefix": true,
+    "doxdocgen.c.factoryMethodText": "Create a {name}",
+    "doxdocgen.c.getterText": "Get the {name}",
+    "doxdocgen.c.setterText": "Set the {name}",
+    "doxdocgen.cpp.ctorText": "Construct a new {name}",
+    "doxdocgen.cpp.dtorText": "Destroy the {name}",
+    "doxdocgen.generic.boolReturnsTrueFalse": false,
+
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "workbench.tree.indent": 13,
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Visual Studio Light",
+
+    "workbench.colorCustomizations": {"editor.background": "#f0f0f0"},
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "comment",
+                    "comment.block",
+                    "comment.line",
+                ],
+                "settings": { "foreground": "#a0a0a0", "fontStyle": "" }
+            },
+            {
+                "scope": "storage.type.class.doxygen",
+                "settings": { "foreground": "#787878", "fontStyle": "italic" }
+            },
+            {
+                "scope": [
+                    "string",
+                    "meta.embedded.assembly",
+                ],
+                "settings": { "foreground": "#cc2222", "fontStyle": "" }
+            },
+            {
+                "scope": "invalid",
+                "settings": {
+                    "foreground": "#ff0000"
+                }
+            },
+            {
+                "scope": [
+                    "meta.preprocessor",
+                    "entity.name.function.preprocessor",
+                    "entity.other.attribute-name",
+                ],
+                "settings": { "foreground": "#8f5500", "fontStyle": "" }
+            },
+            {
+                "scope": [
+                    "storage",
+                    "storage.type",
+                    "keyword",
+                    "variable.language",
+                    "storage.modifier",
+                    "keyword.operator.noexcept",
+                ],
+                "settings": { "foreground": "#0000ff", "fontStyle": "" }
+            },
+            {
+                "scope": [
+                    "keyword.operator.new",
+                    "keyword.operator.delete",
+                    "keyword.control",
+                    "keyword.operator.logical.python",
+                    "keyword.operator.wordlike",
+                    "keyword.other.using",
+                    "keyword.other.operator",
+                    "entity.name.operator",
+                ],
+                "settings": { "foreground": "#dd00dd", "fontStyle": "" }
+            },
+            {
+                "scope": "entity.name.namespace",
+                "settings": { "foreground": "#88bb88", "fontStyle": "" }
+            },
+            {
+                "scope": [
+                    "constant.language",
+                    "keyword.other.unit",
+                    "constant.numeric",
+                    "variable.other.enummember",
+                    "variable.other.constant",
+                    "keyword.operator.plus.exponent",
+                    "keyword.operator.minus.exponent",
+                    "entity.name.operator.custom-literal",
+                    "variable.other.global",
+                ],
+                "settings": { "foreground": "#009900", "fontStyle": "" }
+            },
+            {
+                "scope": [
+                    "storage.type.built-in",
+                    "storage.type.primitive",
+                    "entity.name.type",
+                ],
+                "settings": { "foreground": "#800080", "fontStyle": "" }
+            },
+            {
+                "scope": "variable.other.property",
+                "settings": { "foreground": "#660000", "fontStyle": "" }
+            },
+            {
+                "scope": "variable.other.local",
+                "settings": { "foreground": "#000000", "fontStyle": "" }
+            },
+            {
+                "scope": [
+                    "keyword.operator.expression",
+                    "keyword.operator.cast",
+                    "keyword.operator.sizeof",
+                    "keyword.operator.alignof",
+                    "keyword.operator.typeid",
+                    "keyword.operator.alignas",
+                    "keyword.operator.instanceof",
+                ],
+                "settings": { "foreground": "#0000bb", "fontStyle": "" }
+            },
+            {
+                "scope": "entity.name.function",
+                "settings": { "foreground": "#000088", "fontStyle": "" }
+            },
+
+        ]
+    },
+}
