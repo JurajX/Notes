@@ -21,11 +21,11 @@ class StockObserver
     + ~StockObserver()
     + StockObserver()
     .. other methods ..
-    + update(prices) -> void;
-    + printPrice() -> void;
+    + update(prices) -> void
+    + printPrice() -> void
     __ private data __
-    - company_;
-    - price_;
+    - company_
+    - price_
 }
 
 Subscriber <|-- StockObserver
