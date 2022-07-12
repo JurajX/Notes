@@ -1,0 +1,12 @@
+# Strategy Design Pattern
+
+In computer programming, the strategy pattern (a.k.a. the policy pattern) is a behavioral software design pattern that enables selecting an algorithm at runtime. Instead of implementing a single algorithm directly, code receives run-time instructions as to which in a family of algorithms to use.
+[(From Wiki.)](https://en.wikipedia.org/wiki/Strategy_pattern)
+
+## Class Diagram
+
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Strategy/strategy.puml)
+
+## Class Diagram of Implementation
+
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Strategy/implemented.puml)

@@ -1,0 +1,72 @@
+@startuml
+
+abstract class Animal
+{
+    .. constructors and destructors ..
+    + virtual ~Animal()
+    + Animal(string_view, unique_ptr<Flys>)
+    .. getters and setters ..
+    + virtual getName() const -> string
+    + virtual setFlyingAbility(unique_ptr<Flys>) -> void
+    .. other methods ..
+    + virtual makeSound() const -> string
+    + virtual tryToFly() const -> string
+    __ private data __
+    - string name_
+    - unique_ptr<Flys> flyingType_
+}
+
+class Bird
+{
+    .. constructors and destructors ..
+    + virtual ~Bird()
+    + Bird()
+    + Bird(string_view)
+    .. other methods ..
+    + makeSound() const -> string override
+}
+
+class Dog
+{
+    .. constructors and destructors ..
+    + virtual ~Dog()
+    + Dog()
+    + Dog(string_view)
+    .. other methods ..
+    + makeSound() const -> string override
+}
+
+Animal <|-- Bird
+Animal <|-- Dog
+
+interface Flys
+{
+    .. constructors and destructors ..
+    + virtual ~Flys()
+    + Flys()
+    .. other methods ..
+    + {abstract} fly() const -> string
+}
+
+class ItFlys
+{
+    .. constructors and destructors ..
+    + virtual ~ItFlys()
+    + ItFlys()
+    .. other methods ..
+    + virtual fly() const -> string override
+}
+class CannotFly
+{
+    .. constructors and destructors ..
+    + virtual ~CannotFly() = default
+    + CannotFly() = default
+    .. other methods ..
+    + virtual fly() const -> string override
+}
+
+Animal *-- Flys
+Flys <|.. ItFlys
+Flys <|.. CannotFly
+
+@enduml
