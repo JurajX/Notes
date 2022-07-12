@@ -1,49 +1,50 @@
 @startuml
 
-interface AbsProductA { }
-class AbsProductA1 { }
-class AbsProductA2 { }
+interface ProductA { }
+class ProductA2 { }
 
-AbsProductA <|.. AbsProductA1
-AbsProductA <|.. AbsProductA2
+ProductA <|.. ProductA1
+ProductA <|.. ProductA2
 
-interface AbsProductB { }
-class AbsProductB1 { }
-class AbsProductB2 { }
+interface ProductB { }
+class ProductB1 { }
+class ProductB2 { }
 
-AbsProductB <|.. AbsProductB1
-AbsProductB <|.. AbsProductB2
+ProductB <|.. ProductB1
+ProductB <|.. ProductB2
 
-interface AbsFactory
+interface Factory
 {
-    + createAbsProductA() -> AbsProductA
-    + createAbsProductB() -> AbsProductB
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
 }
 
-class AbsFactoryA
+class FactoryA
 {
-    + createAbsProductA() -> AbsProductA
-    + createAbsProductB() -> AbsProductB
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
 }
 
-class AbsFactoryB
+class FactoryB
 {
-    + createAbsProductA() -> AbsProductA
-    + createAbsProductB() -> AbsProductB
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
 }
 
-AbsFactory <|.. AbsFactoryA
-AbsFactory <|.. AbsFactoryB
+Factory <|.. FactoryA
+Factory <|.. FactoryB
 
-AbsProductA <-- AbsFactory
-AbsProductB <-- AbsFactory
-AbsProductA1 <--- AbsFactoryA
-AbsProductB1 <--- AbsFactoryA
-AbsProductA2 <--- AbsFactoryB
-AbsProductB2 <--- AbsFactoryB
+ProductA <-- Factory
+ProductB <-- Factory
+ProductA1 <--- FactoryA
+ProductB1 <--- FactoryA
+ProductA2 <--- FactoryB
+ProductB2 <--- FactoryB
 
-class AbsClient { }
+class Client { }
 
-AbsClient --o AbsFactory
+FactoryA o-- Client
+FactoryB o-- Client
+
 
 @enduml
