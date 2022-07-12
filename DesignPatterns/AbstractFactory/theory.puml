@@ -1,0 +1,49 @@
+@startuml
+
+interface AbsProductA { }
+class AbsProductA1 { }
+class AbsProductA2 { }
+
+AbsProductA <|.. AbsProductA1
+AbsProductA <|.. AbsProductA2
+
+interface AbsProductB { }
+class AbsProductB1 { }
+class AbsProductB2 { }
+
+AbsProductB <|.. AbsProductB1
+AbsProductB <|.. AbsProductB2
+
+interface AbsFactory
+{
+    + createAbsProductA() -> AbsProductA
+    + createAbsProductB() -> AbsProductB
+}
+
+class AbsFactoryA
+{
+    + createAbsProductA() -> AbsProductA
+    + createAbsProductB() -> AbsProductB
+}
+
+class AbsFactoryB
+{
+    + createAbsProductA() -> AbsProductA
+    + createAbsProductB() -> AbsProductB
+}
+
+AbsFactory <|.. AbsFactoryA
+AbsFactory <|.. AbsFactoryB
+
+AbsProductA <-- AbsFactory
+AbsProductB <-- AbsFactory
+AbsProductA1 <--- AbsFactoryA
+AbsProductB1 <--- AbsFactoryA
+AbsProductA2 <--- AbsFactoryB
+AbsProductB2 <--- AbsFactoryB
+
+class AbsClient { }
+
+AbsClient --o AbsFactory
+
+@enduml
