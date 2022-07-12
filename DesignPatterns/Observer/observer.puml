@@ -1,0 +1,29 @@
+@startuml
+
+class Publisher
+{
+    - observerCollection
+    + register(Subscriber)
+    + deregister(Subscriber)
+    + notify()
+}
+
+interface Subscriber
+{
+    + {abstract} update()
+}
+
+class SubscriberA
+{
+    + update()
+}
+class SubscriberB
+{
+    + update()
+}
+
+Publisher o-- Subscriber
+Subscriber <|.. SubscriberA
+Subscriber <|.. SubscriberB
+
+@enduml
