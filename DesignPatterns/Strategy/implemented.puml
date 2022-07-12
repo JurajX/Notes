@@ -3,37 +3,37 @@
 abstract class Animal
 {
     .. constructors and destructors ..
-    + virtual ~Animal()
-    + Animal(string_view, unique_ptr<Flys>)
+    + ~Animal()
+    + Animal(string_view, Flys*)
     .. getters and setters ..
-    + virtual getName() const -> string
-    + virtual setFlyingAbility(unique_ptr<Flys>) -> void
+    + getName() const -> string
+    + setFlyingAbility(Flys*) -> void
     .. other methods ..
-    + virtual makeSound() const -> string
-    + virtual tryToFly() const -> string
+    + makeSound() const -> string
+    + tryToFly() const -> string
     __ private data __
-    - string name_
-    - unique_ptr<Flys> flyingType_
+    - name_
+    - Flys* flyingType_
 }
 
 class Bird
 {
     .. constructors and destructors ..
-    + virtual ~Bird()
+    + ~Bird()
     + Bird()
     + Bird(string_view)
     .. other methods ..
-    + makeSound() const -> string override
+    + makeSound() const -> string
 }
 
 class Dog
 {
     .. constructors and destructors ..
-    + virtual ~Dog()
+    + ~Dog()
     + Dog()
     + Dog(string_view)
     .. other methods ..
-    + makeSound() const -> string override
+    + makeSound() const -> string
 }
 
 Animal <|-- Bird
@@ -42,7 +42,7 @@ Animal <|-- Dog
 interface Flys
 {
     .. constructors and destructors ..
-    + virtual ~Flys()
+    + ~Flys()
     + Flys()
     .. other methods ..
     + {abstract} fly() const -> string
@@ -51,18 +51,18 @@ interface Flys
 class ItFlys
 {
     .. constructors and destructors ..
-    + virtual ~ItFlys()
+    + ~ItFlys()
     + ItFlys()
     .. other methods ..
-    + virtual fly() const -> string override
+    + fly() const -> string
 }
 class CannotFly
 {
     .. constructors and destructors ..
-    + virtual ~CannotFly() = default
+    + ~CannotFly() = default
     + CannotFly() = default
     .. other methods ..
-    + virtual fly() const -> string override
+    + fly() const -> string
 }
 
 Animal *-- Flys
