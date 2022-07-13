@@ -1,6 +1,7 @@
 # Strategy Design Pattern
 
-In computer programming, the strategy pattern (a.k.a. the policy pattern) is a behavioral software design pattern that enables selecting an algorithm at runtime. Instead of implementing a single algorithm directly, code receives run-time instructions as to which in a family of algorithms to use.
+In computer programming, the strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangable. Strategy lets the algorithm vary independently from clients that use it.
+I.e. it is a behavioral software design pattern that enables selecting an algorithm at runtime. Instead of implementing a single algorithm directly, code receives run-time instructions as to which in a family of algorithms to use.
 [(From Wiki.)](https://en.wikipedia.org/wiki/Strategy_pattern)
 
 ## Class Diagram

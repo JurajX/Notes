@@ -1,0 +1,27 @@
+@startuml
+
+package Aggregation <<Rectangle>> {
+    Car o-- Engine
+}
+
+package Composition <<Rectangle>> {
+    House *-- Room
+}
+
+package Inheritance <<Rectangle>> {
+    Animal <|-- Dog
+}
+
+package Implementation <<Rectangle>> {
+    Interface <|.. Impl
+}
+
+package Association <<Rectangle>> {
+    Player --> HealthBar
+}
+
+package Dependency <<Rectangle>> {
+    Client ..> Supplier
+}
+
+@enduml
