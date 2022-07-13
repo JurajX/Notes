@@ -2,6 +2,8 @@
 
 The singleton pattern ensures that a class has only one instance. This is achieved through a private Constructor, a private static instance of the singleton, and a static method returning the private static instance.
 
+This is considered a bad practice!
+
 [(From Wiki.)](https://en.wikipedia.org/wiki/Singleton_pattern)
 
 ## Class Diagram
