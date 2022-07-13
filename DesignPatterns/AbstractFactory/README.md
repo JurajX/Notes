@@ -1,4 +1,4 @@
-# Factory Design Pattern
+# Abstract Factory Design Pattern
 
 The abstract factory pattern is a software design pattern that provides an interface (encapsulates a group of individual factories) for creating families of related or dependent objects without specifying their concrete classes.
 

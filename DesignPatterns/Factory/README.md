@@ -1,4 +1,4 @@
-# Factory Design Pattern
+# Factory Method Design Pattern
 
 The factory method pattern is a software design pattern that uses factories to deal with the problem of creating objects without having to specify the exact class and parameters of the object that will be created. This is done by calling a factory method:
 
