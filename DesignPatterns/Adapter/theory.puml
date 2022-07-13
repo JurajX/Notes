@@ -1,0 +1,27 @@
+@startuml
+
+interface Target
+{
+    + operation()
+}
+
+Client -> Target
+
+class Adapter
+{
+    + operation()
+}
+note right of Adapter::operation()
+    adaptee.specificOperation()
+end note
+
+Target <|.. Adapter
+
+Class Adaptee
+{
+    + specificOperation()
+}
+
+Adaptee <-- Adapter
+
+@enduml
