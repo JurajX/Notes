@@ -4,7 +4,7 @@ The singleton pattern ensures that a class has only one instance. This is achiev
 
 This is considered a bad practice!
 
-[(From Wiki.)](https://en.wikipedia.org/wiki/Singleton_pattern)
+[(Modified, from Wiki.)](https://en.wikipedia.org/wiki/Singleton_pattern)
 
 ## Class Diagram
 

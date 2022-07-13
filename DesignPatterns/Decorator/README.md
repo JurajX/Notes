@@ -2,7 +2,7 @@
 
 In object-oriented programming, the decorator pattern allows for attaching additional behaviours to an individual object dynamically, and without affectiong the behaviour of other objects from the same class. It provides a flexible alternative to subclassing for extending functionality.
 
-[(From Wiki.)](https://en.wikipedia.org/wiki/Decorator_pattern)
+[(Modified, from Wiki.)](https://en.wikipedia.org/wiki/Decorator_pattern)
 
 ## Class Diagram
 

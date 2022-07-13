@@ -4,7 +4,7 @@ In object-oriented programming, the command pattern uses an object to encapsulat
 
 This is similar to Strategy Design Pattern.
 
-[(From Wiki.)](https://en.wikipedia.org/wiki/Command_pattern)
+[(Modified, from Wiki.)](https://en.wikipedia.org/wiki/Command_pattern)
 
 ## Class Diagram
 
