@@ -18,7 +18,7 @@ This indicates that a particular class is responsible for the implementation of 
 
 ## Association
 
-An Association reflects relation between two classes. One class has access to some instances of the other class, but not vice versa. E.g. Player has a HelathBar but the later doesn't know about the former.
+An Association reflects relation between two classes. One class has access to some instances of the other class, but not vice versa. E.g. a animal has a speak interface, but the interface doesn't know about the animal.
 Association relationship is stronger than Dependency relationship, it implies a closer connection between entities.
 
 ## Dependency

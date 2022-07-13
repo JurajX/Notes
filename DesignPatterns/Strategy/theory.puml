@@ -1,7 +1,5 @@
 @startuml
 
-class Context { }
-
 interface Strategy
 {
     + {abstract} execute()
@@ -16,7 +14,7 @@ class StrategyB
     + execute()
 }
 
-Context *-- Strategy
+Context -> Strategy
 Strategy <|.. StrategyA
 Strategy <|.. StrategyB
 

@@ -9,7 +9,7 @@ package Composition <<Rectangle>> {
 }
 
 package Inheritance <<Rectangle>> {
-    Animal <|-- Dog
+    Pet <|-- Dog
 }
 
 package Implementation <<Rectangle>> {
@@ -17,11 +17,11 @@ package Implementation <<Rectangle>> {
 }
 
 package Association <<Rectangle>> {
-    Player --> HealthBar
+    Animal --> SpeakInterface
 }
 
 package Dependency <<Rectangle>> {
-    Client ..> Supplier
+    Processor ..> Data
 }
 
 @enduml

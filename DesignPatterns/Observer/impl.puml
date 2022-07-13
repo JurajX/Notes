@@ -58,7 +58,9 @@ class StockGrabber
     - prices_
 }
 
+StockGrabber o-- Company
+
 Publisher <|-- StockGrabber
-Publisher o-- Subscriber
+Publisher .> Subscriber
 
 @enduml

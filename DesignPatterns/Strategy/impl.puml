@@ -65,7 +65,7 @@ class CannotFly
     + fly() const -> string
 }
 
-Animal *-- Flys
+Animal -> Flys
 Flys <|.. ItFlys
 Flys <|.. CannotFly
 

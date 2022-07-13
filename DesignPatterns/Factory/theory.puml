@@ -14,11 +14,6 @@ interface Factory
     + createAnimal() -> Animal*
 }
 
-class RandomAnimalFactory
-{
-    + createAnimal() -> Animal*
-}
-
 class SmallAnimalFactory
 {
     + createAnimal() -> Animal*
@@ -29,21 +24,15 @@ class BigAnimalFactory
     + createAnimal() -> Animal*
 }
 
-Animal <- Factory
-Dog <-- RandomAnimalFactory
-Cat <-- RandomAnimalFactory
-Dog <-- SmallAnimalFactory
-Cat <-- SmallAnimalFactory
-Dog <-- BigAnimalFactory
-Cat <-- BigAnimalFactory
-Factory <|.. RandomAnimalFactory
-Factory <|.. SmallAnimalFactory
-Factory <|.. BigAnimalFactory
+Animal <. Factory
+Dog <.. SmallAnimalFactory
+Cat <.. SmallAnimalFactory
+Dog <.. BigAnimalFactory
+Cat <.. BigAnimalFactory
+Factory <|... SmallAnimalFactory
+Factory <|... BigAnimalFactory
 
-class Client { }
-
-RandomAnimalFactory o-- Client
-SmallAnimalFactory o-- Client
-BigAnimalFactory o-- Client
+SmallAnimalFactory --o Client
+BigAnimalFactory --o Client
 
 @enduml

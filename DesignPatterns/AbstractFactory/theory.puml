@@ -34,17 +34,15 @@ class FactoryB
 Factory <|.. FactoryA
 Factory <|.. FactoryB
 
-ProductA <-- Factory
-ProductB <-- Factory
-ProductA1 <--- FactoryA
-ProductB1 <--- FactoryA
-ProductA2 <--- FactoryB
-ProductB2 <--- FactoryB
+ProductA <.. Factory
+ProductB <.. Factory
+ProductA1 <... FactoryA
+ProductB1 <... FactoryA
+ProductA2 <... FactoryB
+ProductB2 <... FactoryB
 
-class Client { }
-
-FactoryA o-- Client
-FactoryB o-- Client
+FactoryA --o Client
+FactoryB --o Client
 
 
 @enduml

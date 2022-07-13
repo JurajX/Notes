@@ -1,12 +1,23 @@
 @startuml
 
-class Publisher
+interface Publisher
 {
-    - observerCollection
     + register(Subscriber)
     + deregister(Subscriber)
     + notify()
 }
+
+class PublisherA
+{
+    + register(Subscriber)
+    + deregister(Subscriber)
+    + notify()
+    __ private data __
+    - subscribers
+}
+
+Publisher <|.. PublisherA
+Subscriber o-- PublisherA
 
 interface Subscriber
 {
@@ -22,7 +33,7 @@ class SubscriberB
     + update()
 }
 
-Publisher o-- Subscriber
+Publisher .> Subscriber
 Subscriber <|.. SubscriberA
 Subscriber <|.. SubscriberB
 
