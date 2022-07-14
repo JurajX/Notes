@@ -1,0 +1,30 @@
+@startuml
+
+Abstract Abstraction
+{
+    - Implementor ptr
+    + fn()
+}
+
+Class RefinedAbstraction
+{
+    +refinedFn()
+}
+
+Abstraction <|-- RefinedAbstraction
+
+Interface Implementor
+{
+    + implementation()
+}
+
+Class ConcreteImplementor
+{
+    +implementation()
+}
+
+Implementor <|.. ConcreteImplementor
+
+Abstraction -> Implementor
+
+@enduml

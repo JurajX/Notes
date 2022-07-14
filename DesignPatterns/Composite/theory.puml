@@ -1,0 +1,24 @@
+@startuml
+
+Class Component
+{
+    + operation()
+}
+
+Class Composite
+{
+    + operation()
+    + add()
+    + remove()
+}
+
+Class Leaf
+{
+    + operation()
+}
+
+Component "0..* children" --o "1 parent" Composite
+Component <|-- Composite
+Component <|-- Leaf
+
+@enduml

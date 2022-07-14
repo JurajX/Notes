@@ -1,0 +1,22 @@
+@startuml
+
+Abstract AbstractCls
+{
+    + templateMethod()
+    + {abstract} hook1()
+    + {abstract} hook2()
+}
+note right of AbstractCls::templateMethod()
+    This method
+    uses the hooks.
+end note
+
+Class ConcreteCls
+{
+    + hook1()
+    + hook2()
+}
+
+AbstractCls <|-- ConcreteCls
+
+@enduml

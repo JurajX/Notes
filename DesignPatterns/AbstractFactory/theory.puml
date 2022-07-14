@@ -1,0 +1,48 @@
+@startuml
+
+interface ProductA { }
+class ProductA2 { }
+
+ProductA <|.. ProductA1
+ProductA <|.. ProductA2
+
+interface ProductB { }
+class ProductB1 { }
+class ProductB2 { }
+
+ProductB <|.. ProductB1
+ProductB <|.. ProductB2
+
+interface Factory
+{
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
+}
+
+class FactoryA
+{
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
+}
+
+class FactoryB
+{
+    + createProductA() -> ProductA
+    + createProductB() -> ProductB
+}
+
+Factory <|.. FactoryA
+Factory <|.. FactoryB
+
+ProductA <.. Factory
+ProductB <.. Factory
+ProductA1 <... FactoryA
+ProductB1 <... FactoryA
+ProductA2 <... FactoryB
+ProductB2 <... FactoryB
+
+FactoryA --o Client
+FactoryB --o Client
+
+
+@enduml

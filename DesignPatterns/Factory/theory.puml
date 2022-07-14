@@ -1,0 +1,38 @@
+@startuml
+' ----------------- Factory Design Pattern
+
+interface Animal { }
+class Dog { }
+class Cat { }
+
+Animal <|.. Dog
+Animal <|.. Cat
+
+interface Factory
+{
+    + operator()() -> Animal*
+    + createAnimal() -> Animal*
+}
+
+class SmallAnimalFactory
+{
+    + createAnimal() -> Animal*
+}
+
+class BigAnimalFactory
+{
+    + createAnimal() -> Animal*
+}
+
+Animal <. Factory
+Dog <.. SmallAnimalFactory
+Cat <.. SmallAnimalFactory
+Dog <.. BigAnimalFactory
+Cat <.. BigAnimalFactory
+Factory <|... SmallAnimalFactory
+Factory <|... BigAnimalFactory
+
+SmallAnimalFactory --o Client
+BigAnimalFactory --o Client
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+
+class Invoker
+{
+    + Invoker(list<Command>)
+}
+
+interface Command
+{
+    + {abstract} do()
+    + {abstract} undo()
+}
+
+Invoker -> Command
+
+class CommandA
+{
+    + do()
+    + undo()
+}
+
+Command <|-- CommandA
+
+class Receiver
+{
+    + action()
+}
+
+Receiver -o CommandA
+
+@enduml

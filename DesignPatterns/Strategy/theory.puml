@@ -1,0 +1,21 @@
+@startuml
+
+interface Strategy
+{
+    + {abstract} execute()
+}
+
+class StrategyA
+{
+    + execute()
+}
+class StrategyB
+{
+    + execute()
+}
+
+Context -> Strategy
+Strategy <|.. StrategyA
+Strategy <|.. StrategyB
+
+@enduml

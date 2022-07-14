@@ -1,0 +1,26 @@
+@startuml
+
+object Context {
+    state.operation()
+}
+Context -> State
+
+Interface State
+{
+    + {abstract} operation()
+}
+
+Class State1
+{
+    + operation()
+}
+
+Class State2
+{
+    +operation()
+}
+
+State <|.. State1
+State <|.. State2
+
+@enduml

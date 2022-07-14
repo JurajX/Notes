@@ -1,0 +1,41 @@
+@startuml
+
+interface Component
+{
+    + {Abstract} fnA()
+    + {Abstract} fnB()
+}
+
+class ConcreteComp
+{
+    + fnA()
+    + fnB()
+}
+
+Component <|.. ConcreteComp
+
+Abstract Decorator
+{
+    + {Abstract} fnA()
+    + {Abstract} fnB()
+}
+
+Component <|- Decorator
+Component <- Decorator
+
+Class ConcreteDecorA
+{
+    + fnA()
+    + fnB()
+}
+
+Class ConcreteDecorB
+{
+    + fnA()
+    + fnB()
+}
+
+Decorator <|-- ConcreteDecorA
+Decorator <|-- ConcreteDecorB
+
+@enduml

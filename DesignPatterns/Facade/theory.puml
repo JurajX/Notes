@@ -1,0 +1,23 @@
+@startuml
+
+class Client { }
+
+Client o- Facade
+
+Facade .> Crazyness
+
+package Crazyness <<Rectangle>> {
+    Class A
+    Class B
+    Class C
+    Class D
+}
+
+A -> B
+B --> C
+B --> D
+A --> D
+A --> C
+C -> D
+
+@enduml

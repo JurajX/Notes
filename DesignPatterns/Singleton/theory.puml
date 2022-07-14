@@ -1,0 +1,13 @@
+@startuml
+
+class Singleton
+{
+    .. static methods ..
+    + getInstance() -> Singleton
+    .. constructors and destructors ..
+    - Singleton()
+    __ private static data __
+    - Singleton instance
+}
+
+@enduml

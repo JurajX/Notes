@@ -1,0 +1,40 @@
+@startuml
+
+interface Publisher
+{
+    + register(Subscriber)
+    + deregister(Subscriber)
+    + notify()
+}
+
+class PublisherA
+{
+    + register(Subscriber)
+    + deregister(Subscriber)
+    + notify()
+    __ private data __
+    - subscribers
+}
+
+Publisher <|.. PublisherA
+Subscriber o-- PublisherA
+
+interface Subscriber
+{
+    + {abstract} update()
+}
+
+class SubscriberA
+{
+    + update()
+}
+class SubscriberB
+{
+    + update()
+}
+
+Publisher .> Subscriber
+Subscriber <|.. SubscriberA
+Subscriber <|.. SubscriberB
+
+@enduml
