@@ -25,6 +25,6 @@ Class ConcreteImplementor
 
 Implementor <|.. ConcreteImplementor
 
-Abstraction o- Implementor
+Abstraction -> Implementor
 
 @enduml

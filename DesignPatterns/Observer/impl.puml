@@ -28,7 +28,7 @@ class StockObserver
     - price_
 }
 
-Subscriber <|-- StockObserver
+Subscriber <|.. StockObserver
 StockObserver o-- Company
 
 interface Publisher
@@ -59,8 +59,9 @@ class StockGrabber
 }
 
 StockGrabber o-- Company
+Subscriber o-- StockGrabber
 
-Publisher <|-- StockGrabber
+Publisher <|.. StockGrabber
 Publisher .> Subscriber
 
 @enduml

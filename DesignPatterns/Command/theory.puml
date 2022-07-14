@@ -11,7 +11,7 @@ interface Command
     + {abstract} undo()
 }
 
-Invoker .> Command
+Invoker -> Command
 
 class CommandA
 {

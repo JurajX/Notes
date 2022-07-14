@@ -2,9 +2,9 @@
 
 class Client { }
 
-Client -> Facade
+Client o- Facade
 
-Facade -> Crazyness
+Facade .> Crazyness
 
 package Crazyness <<Rectangle>> {
     Class A

@@ -9,15 +9,19 @@ package Composition <<Rectangle>> {
 }
 
 package Inheritance <<Rectangle>> {
+    Abstract Pet
     Pet <|-- Dog
 }
 
 package Implementation <<Rectangle>> {
-    Interface <|.. Impl
+    Interface Interf
+    Interf <|.. Impl
 }
 
 package Association <<Rectangle>> {
-    Animal --> SpeakInterface
+    Interface Speak
+    Abstract Animal
+    Animal --> Speak
 }
 
 package Dependency <<Rectangle>> {

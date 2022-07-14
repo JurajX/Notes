@@ -23,7 +23,7 @@ note left of Proxy::operation()
 end note
 
 Subject <|-- Proxy
-Proxy -> RealSubject
+Proxy *- RealSubject
 
 
 @enduml

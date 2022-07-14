@@ -22,6 +22,6 @@ Class Adaptee
     + specificOperation()
 }
 
-Adaptee <-- Adapter
+Adaptee --o Adapter
 
 @enduml
