@@ -16,8 +16,8 @@ Component <|.. ConcreteComp
 
 Abstract Decorator
 {
-    + fnA()
-    + fnB()
+    + {Abstract} fnA()
+    + {Abstract} fnB()
 }
 
 Component <|- Decorator
