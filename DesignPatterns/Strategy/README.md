@@ -6,8 +6,8 @@ I.e. it is a behavioral software design pattern that enables selecting an algori
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Strategy/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/Strategy/theory.puml)
 
 ## Class Diagram of Implementation
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Strategy/impl.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/Strategy/impl.puml)

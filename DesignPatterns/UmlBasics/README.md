@@ -28,4 +28,4 @@ Compared to Association, Dependency relationship is weaker.
 
 ## Class Diagram Arrow Types
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/UmlBasics/arrowTypes.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/UmlBasics/arrowTypes.puml)

@@ -6,4 +6,4 @@ A proxy pattern provides a surogate or a placeholder for another object in order
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Proxy/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/Proxy/theory.puml)

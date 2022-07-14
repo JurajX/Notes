@@ -6,4 +6,4 @@ The abstract factory pattern is a software design pattern that provides an inter
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/AbstractFactory/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/AbstractFactory/theory.puml)

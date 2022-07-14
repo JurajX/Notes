@@ -7,4 +7,4 @@ This pattern is close to the concept of finite-state machines. The state pattern
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/State/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/State/theory.puml)

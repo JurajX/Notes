@@ -9,4 +9,4 @@ The factory method pattern is a software design pattern that uses factories to d
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Factory/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/Factory/theory.puml)

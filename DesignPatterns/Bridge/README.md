@@ -8,4 +8,4 @@ When there is only one fixed implementation, this pattern is known as the Pimpl 
 
 ## Class Diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/Bridge?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/design-patterns/DesignPatterns/Bridge/theory.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/Bridge?cache=no&src=https://raw.githubusercontent.com/JurajX/Notes/master/DesignPatterns/Bridge/theory.puml)
