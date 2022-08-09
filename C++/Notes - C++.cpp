@@ -34,12 +34,11 @@
 //      Argument Passing
 //      Pointer to a Function
 //      Lambda Function
-// Modules
+// Modules c++20
 // Structures Unions and Enumerations
 //      Structures
 //      Unions
 //      Enumerations
-// Modules c++20
 // Classes
 //      Class Definition, Initialisation, Member Functions
 //      Friend Functions and Classes
@@ -172,8 +171,8 @@ long double;                    // extended-precision float
 0x3.ABCp-10, 0Xb.cp12l          // hexadecimal floating-point literal
 
 // Alignment
-alignof();                      // alignment of an argument in std::size_t; more about is in expressions
-alignas();                      // used in declarations of unknown types
+alignof();                      // alignment (in bytes) of an argument, returns std::size_t; more about it in expressions
+alignas();                      // specifies the alignment requirement of a type or an object
 
 // Constants
 constexpr;                          // evaluated at compile time, can be initialised only by constant expressions
@@ -186,7 +185,7 @@ double sum(const vector<double>&);  // fct sum will not modify its argument
 // additional
 "some string";                      // C-style (zero terminated) string (const char[11])
 R"(raw string)";                    // raw string, escaped sequences are ignored, (\" is ", \n is enter, etc.)
-R"delim(raw string)delim"           // raw string; delim can be any 16 char long sequence, used in case )" appears in the middle of the raw string
+R"delim(raw string)delim"           // raw string; delim can be any 16 char long sequence,  this is used in case )" appears in the raw string
 
 
 //---------- Declarations
@@ -200,7 +199,7 @@ R"delim(raw string)delim"           // raw string; delim can be any 16 char long
 // declarator ops are:
 //  - *, *const, *volatile  // plain, constant, and volatile pointer; all prefix
 //  - &, &&, []             // lvalue and rvalue reference, array; pre-, pre-, post-fix
-//  - auto, (), ->          // fcts (suffix return type), fcts, returns from fcts; pre-, post-, post-fix
+//  - auto, (), ->          // fcts, fcts, returns from fcts (suffix return type); pre-, post-, post-fix
 
 // declarations
 type x;                     // declaration of a variable of type;
@@ -212,15 +211,15 @@ type t2 = {v};              // same as above, no narrowing allowed; = is redunda
 type t3 {};                 // initialise t3 to a default value (zero initialiser), depends on the type
 type t4 = v;                // initialise t4 to v, narrowing applies
 type t5(v);                 // depending on the constructor, different actions might apply
-auto t6 {1};                // t5 is of type initializer_list<int>, always use = with auto to prevent this
+auto t6 {1};                // t6 is of type initializer_list<int>, always use = with auto to prevent this
 
 static;                     // object declared to be static live until the program terminates
 auto;                       // deducing a type of an object; it strips away references and const qualifiers and thus creates a copy
 const auto; auto &;         // specifiers and modifiers are needed if one wants to preserve them, as they are stripped by default
 auto *;                     // for pointers, this is not necessary as pointer specifier is not stripped away
-const auto; auto const;     // both make int *const (e.g. for int *)
-const auto *; auto *const;  // first makes const int *, second makes int *const (e.g. for int *)
-const auto *const;          // makes const int *const (e.g. for int *)
+const auto; auto const;     // if a pointer is assigned, both make type *const (e.g. int *const for int * assignment)
+const auto *; auto *const;  // first makes const type *, second makes type *const
+const auto *const;          // makes const type *const
 decltype(expr)              // deducing a type of an object from an expression, e.g. function; does not strip away references and const qualifiers
 
 // postfixes bind tighter than prefixes
@@ -237,15 +236,15 @@ decltype(auto) x { f() };   // as above
 
 
 //---------- Type Aliases
-using Pchar = char*;        // creates alias for char*
+using Pchar = char*;        // creates an alias for char*
 typedef char* Pchar;        // old syntax, same as above
 
-using a = unsigned my_int;  // applying type specifiers to an alias is not allowed
+using a = unsigned my_int;  // applying type specifiers to an alias (e.g. my_int is alias for int) is not allowed
 
 
 //---------- Casting
 (int)myFloat                        // C casting, not recommended
-int(myfloat)                        // rarely used
+int(myFloat)                        // as above, rarely used
 const_cast<new_type>(expr);         // used to cast away (remove) constness or volatility
 static_cast<new_type>(expr);        // compile-time checked, for
                                     //  ...well-def implicit conversions (int to double),
@@ -259,7 +258,7 @@ std::bit_cast<new_type>(expr);      // defined in <bit>, c++20, requires sizeof(
 
 
 //---------- Structured Bindings
-array tmp { 11, 22, 33 };       // defines 2-element array of ints
+std::array tmp { 11, 22, 33 };  // defines 3-element array of ints
 auto [x, y, z] { tmp };         // defines x, y, z as ints with values from tmp
 
 std::pair tmp { "hi", 5 };      // defines a pair
@@ -274,7 +273,7 @@ extern int x;           // tells compiler that x is a global variable defined el
 
 void f() {
     static bool init { false };     // the init variable "remembers" the state of the f() between different calls; not recommended
-    ...;
+    //...
 }
 
 
@@ -291,11 +290,12 @@ type *f(char);      // function taking char as an argument and returning a point
 type (*f)(char);    // pointer to a function taking char as an argument and returning type
 
 // pointers to void
-//  -can hold any object type except pointers to functions or to members
+//  -can hold any object type except pointers to member functions or to members
+//   https://isocpp.org/wiki/faq/pointers-to-members#cant-cvt-memfnptr-to-voidptr
 //  -can't be dereferenced(*), incremented (++), assigned to another non-void pointer
 //  -they must be explicitely converted to a pointer to a specific type first
 void *vp = p;                   // implicit convertion of p's type to void
-int *p = static_cast<int*>(v);  // safe if *p1 is int, otherwise unsafe
+int *p = static_cast<int*>(vp); // safe if *vp is int, otherwise unsafe
 
 type *const cptr = sth; // constant pointer;     cptr can't be modified, *cptr can
 const type *ptrc = sth; // pointer to constant; *ptrc can't be modified,  ptrc can
@@ -311,7 +311,7 @@ type*; type&;           // as postfixes: pointer to, reference to
 //---------- Memory Allocation
 type *p = new type[N];  // allocates memory for N elements of type and returns a ptr to the zeroth; throws an exception if allocation fails
 new(nothrow) type[N];   // as above, but doesn't throw; returns nullptr if allocation fails
-delete [] p;            // frees the allocated memory returned by new type[]
+delete[] p;             // frees the allocated memory returned by new type[]
 type *p = new type;     // allocates memory for a variable of type and returns a ptr to the memory; throws an exception if allocation fails
 new(nothrow) type;      // as above, but doesn't throw; returns nullptr if allocation fails
 delete p;               // frees the allocated memory returned by new type
@@ -323,7 +323,8 @@ Foo *myFoo { (Foo *)malloc(sizeof(Foo)) };  // only allocates enough memory to h
 Foo *myOtherFoo { new Foo{} };              // allocates enough memory to hold Foo and calls the default constructor on every Foo element
 free(myFoo);                                // only frees the allocated memory; if Foo aquired additional memory it will be leaked
 delete myOtherFoo;                          // also calls Foo's destructor and frees all additional memory acquired by Foo
-realloc()                                   // allocates block of memory of new size and bit-wise copy old data; tears objects holding other objects
+realloc()                                   // allocates block of memory of new size and bit-wise copy old data;
+                                            // tears non-TriviallyCopyable data, e.g. ptr to internal data - data is moved, ptr not updated
 
 // pointer arithmetic
 int *arr { new int[5] };    // defines an array pointer with allocated memory
@@ -336,7 +337,7 @@ float v[N];                 // an array of N floats allocated on the stack, n mu
 float v[N] {1.0, 2.0};      // as above but sets first two elements to 1.0 and 2.0 and the rest to 0.0
 float v[N] {1.0};           // as above but sets all elements to 1.0
 float v[N] { };             // as above but sets all elements to 0.0
-int myArray[] { 1, 2, 3};   // an array of 3 ints, the size if automatically deduced from the initialiser list
+int v[] { 1, 2, 3};         // an array of 3 ints, the size if automatically deduced from the initialiser list
 v[0] = 1.0;                 // assigning 1.0 to the first element
 int v1[] {1, 2, 3};         // declare v1 and initialise it to 1, 2, 3
 int v2[4] {1, 2};           // v2 = {1, 2, 0, 0}
@@ -345,12 +346,12 @@ int v2[4] {1, 2};           // v2 = {1, 2, 0, 0}
 sizeof("Juraj") == 6;       // is true, string literals are zero terminated ('\0')
 const char *ptr {"Juraj"};  // ptr now behaves like char ptr[] {"Juraj"}
 
-int v[] {1,2,3};            // array of three integers; allocated on the stack (no need to delete)
+int v[] {1,2,3};            // as above
 int *p1 = v;                // pointer to initial element of the array v
 int *p2 = v+3;              // pointer to the one-past-last element of v
 int len = p2 - p1;          // len = 3, possible only for pointers pointing to the same array
 
-int matrix[2][3];           // 2 arrays with 3 integers each, i.e. 00,01,02;10,11,12
+int matrix[2][3];           // 2 arrays with 3 integers each, i.e. 00,01,02; 10,11,12
 
 // arrays can only be passed as a pointer to its first element, no passing by value
 // when a multi-dimensional array is passed it is 'flattened'
@@ -377,51 +378,51 @@ const double &cdr {1};      // 1 converted to 1.0 and stored in a kinda temp var
 string &&rr {"Rval str"};   // rr refers to a temporary holding the str; extends the lifetime of the temporary
 string &r {"Rval str"};     // not possible, compilation error
 
-static_cast<T&&>(x)         // is the same as move(x), function for moving objects without copying
+static_cast<T&&>(x)         // is the same as std::move(x), function for moving objects without copying
 
 
 
 //==================== Statements
 
 //---------- Selection Statements
-if(cond) {...;}             // structure of if-statement
-if(init; cond) {...;}       // structure of if-statement with and initialiser; i.e. int i {0}, i lives in if, if else, and else scopes
-else if(cond) {...;}        // additional condition check (optional)
-else {...;}                 // else part (optional)
+if(cond) {/*...*/}          // structure of if-statement
+if(init; cond) {/*...*/}    // structure of if-statement with and initialiser; i.e. int i {0}, i lives in if, if else, and else scopes
+else if(cond) {/*...*/}     // additional condition check (optional)
+else {/*...*/}              // else part (optional)
 
 if constexpr (cond) {} else {}  // evaluated at compile-time; branch can be rejected at compile-time and thus never get compiled
 
-switch(val) {               // structure of switch-statement; val must be of (or convertible to) integral type
-switch((init; val)) {       // switch-statement with initialiser
+switch(val) {/*...*/}       // structure of switch-statement; val must be of (or convertible to) integral type
+switch(init; val) {         // switch-statement with initialiser
     case opt1:              // case labels must be a constant expression of integral of enumeration type
-        ...;                // body for opt1
+        /*...*/             // body for opt1
         break;              // breaks the switch statement (optional); [[fallthrough]] can be used to indicate intended fallthrough
     default:                // default is executed for all values (optional)
-        ...;
+        /*...*/
 }
 
 
 //---------- Iteration Statements
 // range-for statement
-for(type x: v) {...;}                       // for each x in the range v (e.g. std::vector<type>)
-                                            // v must offer v.begin()/begin(v) and v.end()/end(v) iterators
-for(auto x: v) {...;}                       // as above
-for(type &x: v) {...;}                      // allows to modify the elements, x's, in v
-for(auto p=begin(v); p<end(v); ++p) {...;}  // equivalent to the above expression
-for (init; type &x: v)                      // for loop with initialiser; c++20
+for(type x: v) {/*...*/}                        // for each x in the range v (e.g. std::vector<type>)
+                                                // v must offer v.begin()/begin(v) and v.end()/end(v) iterators
+for(auto x: v) {/*...*/}                        // as above
+for(type &x: v) {/*...*/}                       // allows to modify the elements, x's, in v
+for(auto p=begin(v); p<end(v); ++p) {/*...*/}   // equivalent to the above expression
+for (init; type &x: v)                          // for loop with initialiser; c++20
 
 // for statement
-for(iterator, condition, increment){...}
-for(int i=0; i!=max; ++i) {...;}    // iterate over i=0 to i=max (excluded)
-for(string s; cin>>s; ) {...;}      // terminates when cin>>s returns false (e.g. reading fails)
-for( ; *ptr!=0; ++p) {...;}         // iterate over a pointer to a zero-terminated array
-for( ; ; ) {...;}                   // same as while(true) {...;} which is preferred
+for(iterator, condition, increment){/*...*/}
+for(int i=0; i!=max; ++i) {/*...*/}         // iterate over i=0 to i=max (excluded)
+for(string s; cin>>s; ) {/*...*/}           // terminates when cin>>s returns false (e.g. reading fails)
+for( ; *ptr!=0; ++p) {/*...*/}              // iterate over a pointer to a zero-terminated array
+for( ; ; ) {/*...*/}                        // same as while(true) {/*...*/} which is preferred
 
 // while statement
-while(cond) {...;}          // while loop
+while(cond) {/*...*/}           // while loop
 
 // do statement
-do {...;} while(cond)       //
+do {/*...*/} while(cond)        // runs at least once
 
 // loop exit
 break                       // breaks out of the nearest enclosing switch or iteration statements
@@ -524,10 +525,10 @@ cond ? "cond is true" : "cond is false";
 
 //---------- Function Declarations and Definitions
 // Functions and Procedures
-type f(type a, ...)         // required parts of a function declaration: return type, name, argument list
-void f(type a, ...){...;}   // same as above with a definition in {...;}
-auto f(...) -> type         // same as above with a suffix return type
-auto f(...) -> void {...;}  // same as above with a definition in {...;}
+type f(type a/*, ...*/)             // required parts of a function declaration: return type, name, argument list
+void f(type a/*, ...*/){/*...*/}    // same as above with a definition in {/*...*/}
+auto f(/*...*/) -> type             // same as above with a suffix return type
+auto f(/*...*/) -> void {/*...*/}   // same as above with a definition in {/*...*/}
 
 static type id              // in the fct body allows the fct to preserve info between calls
 __func__                    // name of the function; accessible in the functin body
@@ -553,17 +554,17 @@ const                       // can't modify its object
 [[nodiscard]] int fct();                // compiler issues a warning if the return value is discarded
 [[nodiscard("reason")]]                 // provides an explanation for nodiscard; c++20
 int fct([[maybe_unused]] int param)     // suppresses compiler warning for unused parameter of a fct
-[[noreturn]] void kill();               // suppresses compiler warning for functions that do not return (process termination, etc.)
+[[noreturn]] void kill();               // suppresses compiler warning for functions that do not return to the caller (e.g. process termination)
 [[deprecated]] int fct();               // compiler issues a warning that the function is deprecated
 [[deprecated("reason")]]                // provides an explanation for deprecated; c++20
 [[likely]], [[unlikely]]                // gives compiler hint how (un)likely certain branch is to be executed (if-else; switch)
 
 
 //---------- Argument Passing
-int printf(const char * ...);   // a std fct takse a C-style string and ellipsis - additional arguments
-// examples of printf() in use %s denotes char *, %d denotes int
+int printf(const char *, ...);  // a std fct takse a C-style string and ellipsis - additional arguments
+                                // examples of printf() in use %s denotes char *, %d denotes int
 printf("Hello, world!");
-printf("My name is %s %s.", first_name ,second_name);
+printf("My name is %s %s.", first_name, second_name);
 printf("%d + %d = %d",2,3,5);
 
 
@@ -597,12 +598,12 @@ bool f(auto myfct) {/*...*/};                   // as above, c++20
 
 // lambdas can be params if one uses std::function with matching signature or template
 
-[cptr_lst](params){...;};   // cptr_lst captures elems in the scope, params are as in normal fcts; compiler creates a function object with const op()
+[cptr_lst](params){...;};   // compiler creates a function object with const operator()
 [cptr_lst]{...;};           // () can be omitted if no parameters are to be passed
 [&]; [=]; []; [a, &b];      // capture all by reference; all by copy (this is not implicitly captured c++20); nothing; a by copy, b by reference
 [&, cpt_lst]; [=, &cpt_lst];// capture all by reference but cpt_lst; capture all by copy but cpt_lst
 [this]; [*this];;           // captures the current object via pointer/copy; if [this] the obj has to be alive; access to all members
-[a]()mutable{...;};         // a is captured by copy and can be modified by the lambda fct; makes the op() non-const
+[a]()mutable{...;};         // a is captured by copy and can be modified by the lambda fct; makes the operator() non-const
 [myCapture = "Pi: ", pi]{}; // capture expression; usefull for vars that can't be copied (e.g. unique_ptr)
 
 [...](...)->type {...;};                        // specified return type of lambda fct; type can be decltype(auto) to preserve refs and const
@@ -611,16 +612,17 @@ bool f(auto myfct) {/*...*/};                   // as above, c++20
 
 [] <typename T> (T &v1, T &v2) requires integral<T> {}; // template lambda with an integral constraint
 
-function<int(void)> multBy2Lmbd(int x) { return [x]{ return 2 * x; }; } // allows lambda to be a return type
-auto multiplyBy2Lambda(int x) { return [x]{ return 2 * x; }; }          // same as above
-using LambdaType = decltype([](int a, int b) { return a + b; });        // valid only in c++20
+std::function<int(void)> multBy2Lmbd(int x) { return [x]{ return 2 * x; }; }    // allows lambda to be a return type
+auto multiplyBy2Lambda(int x) { return [x]{ return 2 * x; }; }                  // same as above
+using LambdaType = decltype([](int a, int b) { return a + b; });                // valid only in c++20
 
 
 
-//==================== Modules
+//==================== Modules c++20
 
 // - make splitting declarations and definitions in different files obsolete;
 // - can be split into "submodules" using dots: my.module.name; (p.404 professional c++, 5th edition)
+export; module; import;         // keywords
 
 // module interface files
 //  - have .cppm extension (not standardised yet)
@@ -638,7 +640,7 @@ import moduleName           // no <> can be used
 // module implementation file
 //  - can't export anything
 //  - all imports/includes from interface file are visible here; only true for the implementation files of the module
-module moduleName;          // automatically imports all things declared in the interface file
+module moduleName;          // automatically imports everything declared in the interface file
 
 // the global module fragment (interface and implementation files)
 module;                     // starts the global module fragment
@@ -684,32 +686,21 @@ int i;                      // s and i have the same address
 
 
 //---------- Enumerations
-// Plain Enumeration, not recommended, they mix up scopes as they are exported to the enclosing scope (analogous to using enum Color for 'enum class')
+// Plain Enumeration, not recommended, they mix up scopes (see 'enum class Color')
 enum Color {                // definition of a plain enumeration with default ops =, ==, <, >; ?more ops can be defined?
     red, green, blue};      // elements are implicitly converted to integers
-TrafficL x = blue;          // okay
-TrafficL x = 2;             // error
+Color x = blue;             // okay
+Color x = 2;                // error
 
 // Enumeration Class
 enum class Color : long {   // enum class internaly represented as long (default is int); default ops =, ==, <, >; more ops can be defined
     red=1, green, blue=5};  // elements represented as integers, starting with 1 (the default is 0); green is 2 (previous + 1)
 
-Color x = TraffidL::red;    // definition of an instance red
-Color x = red; Color x = 2; // error
+Color x = Color::red;       // definition of an instance red
+Color x = red; Color x = 2; // both are errors
 
 using enum Color;           // red can be used without the Color:: prefix
 using Color::red;           // red can be used without the prefix, but other colours can't
-
-
-
-//==================== Modules c++20
-export; module; import;         // keywords
-// module interface file
-export module NAME;             // exports module name
-export class X {...};           // specifies which classes of the module are accessible
-// module implementation file
-module NAME;                    // specifies for which module the implementation methods are
-X::member_fct() {...};          // defines the member_fct
 
 
 
@@ -727,12 +718,12 @@ private:                        // only members can access (default)
     int x = 7;                  // in-class initialiser; x will be 7 if the constructor doesn't change it
     int y { 7 };                // as above, preffered (best practice: always initialise memebers)
     int &ref;                   // reference data member; must be initialised in the constructor initialiser
-    cont int &ref1;             // reference to const data member; must be initialised in the constructor initialiser
+    const int &ref1;            // reference to const data member; must be initialised in the constructor initialiser
     mutable int x1              // modifiable even in a const instance of the class or by const method, e.g. 'Get1() const' can change this
     static int s_data;          // static data member, only one for all instances
     static inline int s_i { 0 };// inline static data member, no need to initialise the static member (as opposed to s_data); c++17
     static const int s_ma { 9 };// const static data member, can be initialised in the class declaration
-    static X dflt;              // as above; the X (class's) type can be used as a default for constructor, static member fct can set it
+    static X dflt;              // the X (class's) type can be used as a default for constructor, static member fct can set it
 protected:                      // only members, friends, derived classes (with public or protected access).
 public:                         // everyone can access
     // the default constructors, copy/move constructor/assignment are generated by the compiler (they are non-virtual!); but if any
@@ -753,16 +744,16 @@ public:                         // everyone can access
     virtual ~X();               // destructor declaration, no arguments, can be only one, used to release heap memory; make always virtual;
     virtual ~X() = default;     // makes default constructor virtual (needed for inheritance); all destructors are implicitly marked as noexcept
 
-    static void sFct();             // static fct, does not have this pointer, sees only static members; static keyword not repeated in the definition
+    static void sFct();             // static fct, does not have this pointer, sees only static members; static keyword not repeated in the def
     void SetValue(int v);           // everybody can access
     void SetValue1(int v=0);        // with default; default is only in the declaration
     int& Get() {return &x;};        // in-class function definition, the function is considered to be inline (if compiler agrees)
     inline int& Get();              // inlined (if compiler agrees); definition should be in the same file (advanced compilers don't require this)
-    const int& Get() const {...};   // const overload of get; use Scott Meyer’s const_cast() pattern (def the const one and const_cast for non-const)
+    const int& Get() const;         // const overload; use Scott Meyer’s const_cast() pattern (def the const one and const_cast for non-const)
     int Get1() const;               // does not allow to modify any data members except the mutable ones
 
-    type fct1() & {...};            // can only be called on non-temporary instances
-    type fct2() && {...};           // can only be called on     temporary instances
+    type fct1() & {/*...*/};        // can only be called on non-temporary instances
+    type fct2() && {/*...*/};       // can only be called on     temporary instances
 };
 
 // static data member initialisation;
@@ -771,26 +762,26 @@ int X::s_data { 1 };    // as above, just custom explicit initialisation
 X X::dflt;              // as above
 
 // member function definitions
-X::X() {...;}                   // default constructor definition; called as this: 'X myX {};' or 'X myX;' 'X myX();' is fct declaration!
-X::X(type) {x{1}, x1{2}, ...;}  // "ordinary" constructor definition, x is set to 1 and x1 to 2
-X::X(type):x{1}, x1{2} {...;}   // same as above just with an initialiser for the data member x and x1
-X::X(int x) {...;}              // explicit constructor definition, do not repeat 'explicit'
+X::X() {/*...*/}                    // default constructor definition; called as this: 'X myX {};' or 'X myX;' 'X myX();' is fct declaration!
+X::X(type) {x{1}, x1{2};/*...*/}    // "ordinary" constructor definition, x is set to 1 and x1 to 2
+X::X(type):x{1}, x1{2} {/*...*/}    // same as above just with an initialiser for the data member x and x1
+X::X(int x) {/*...*/}               // explicit constructor definition, do not repeat 'explicit'
 
-X::X(const X &x) {...;}             // copy constructor definition,   copy all memory (non-heap and heap) from src to dst
-X& X::operator=(const X &x) {...;}  // copy assignment definition,    copy all memory (non-heap and heap) from src to dst (check sizes for heap)
-X::X(X &&x) noexcept {...;}         // move constructor declaration, steal all memory (non-heap and heap) from src and leave it with nullptrs
-X& X::operator=(X &&x) noexcept {}  // move assignment definition,    swap all memory (non-heap and heap) between src and dst
-X::~X() {...;}                      // destructor definition; delete all heap memory
+X::X(const X &x) {/*...*/}              // copy constructor definition,   copy all memory (non-heap and heap) from src to dst
+X& X::operator=(const X &x) {/*...*/}   // copy assignment definition,    copy all memory (non-heap and heap) from src to dst (check sizes for heap)
+X::X(X &&x) noexcept {/*...*/}          // move constructor declaration, steal all memory (non-heap and heap) from src and leave it with nullptrs
+X& X::operator=(X &&x) noexcept {}      // move assignment definition,    swap all memory (non-heap and heap) between src and dst
+X::~X() {/*...*/}                       // destructor definition; delete all heap memory
 
-void X::sFct() {...;}               // definition of the static method
-void X::SetValue(int v) {...;}      // definition of a member function
-void X::SetValue1(int v) {...;}     // with default
-int X::Get1() const {...;}          // the const keyword is required in the definition as well
+void X::sFct() {/*...*/}            // definition of the static method
+void X::SetValue(int v) {/*...*/}   // definition of a member function
+void X::SetValue1(int v) {/*...*/}  // with default
+int X::Get1() const {/*...*/}       // the const keyword is required in the definition as well
 
 
 //---------- Friend Functions and Classes
 //  - can access private and protected members of a class
-//  - declarations are placed in the class definition; friend function definitions don't have scope resolution ::, i.e.  type fct(...) {...;}
+//  - declarations are placed in the class definition; friend function definitions don't have scope resolution ::, i.e. type fct(...) {/*...*/}
 class Foo {                             // friend keyword is not repeated in the definitions; can be
     friend class Bar;                   // Bar class is a friend of Foo (all methods of Bar can access private and protected methods of Foo)
     friend void Bar::doFoo(const Foo&); // only doFoo method of Bar class is a friend of Foo
@@ -807,7 +798,7 @@ class Foo {                             // friend keyword is not repeated in the
 += −= *= /= %=          // short arithmetic ops; recommended as method; T& operator+= (const T/E&)
 << >> & | ^             // binary bitwise ops; recommended as global function; T operator<< (const T&, const T/E&)
 >>= <<= &= |= ^=        // short bitwise ops; recommended as method; T& operator<<= (const T/E&)
-<=>                     // three-way comp op; recommended as method; auto operator<=> (const T&) const; partial_ordering operator<=>(const E&) const
+<=>                     // three-way comp op; recommended as method; auto operator<=> (const T&) const; partial_ordering op<=>(const E&) const
 == !=                   // equality/inequality; recommended as method (c++20); bool operator== (const T/E&) const
 !                       // boolean negation op; recommended as method; bool operator!() const
 < > <= >=               // comparison ops; recommended as global function; bool operator< (const T&, const T/E&)
@@ -836,7 +827,7 @@ X::operator int() const {...;}  // defines a conversion from a user-defined type
 class X {
 public:
     X& oparator+=(int)      // member     binary       (one argument)  += -increment- ; should be always method; returns a refefence to the lhs
-    X oparator+(X)          // member     binary       (one argument)  +  -addition-  ; should be implemented in terms of the above (as a non-member)
+    X oparator+(X)          // member     binary       (one argument)  +  -addition-  ; should be impled. in terms of the above (as a non-member)
     X* operator&();         // member     prefix unary (no arguments)  &  -address of-
     X operator&(X);         // member     binary       (one argument)  &  -and-
 };
@@ -855,7 +846,7 @@ bool operator<op>(const X&, const X&);  // should be non-member to support impli
 [[nodiscard]] partial_ordering operator<=>(const X&) const; // (<, >, <=, >=) are generated by compiler; e.g. X1<X2 is std::is_lt(X1<=>X2)
 [[nodiscard]] partial_ordering operator<=>(double) const;   // (<, >, <=, >=) are generated by compiler; arguments can be reordered
 
-[[nodiscard]] partial_ordering operator<=>(const X&) const = default;   // compiler can generate all comparisons; default compares member by member
+[[nodiscard]] partial_ordering operator<=>(const X&) const = default;   // compiler can generate all comparisons; default compares all members
 [[nodiscard]] partial_ordering operator==(const X&) const = default;    // needed if custom operator== is defined; e.g. operator==(double)
 
 // special operators:
@@ -908,7 +899,7 @@ char or wchar_t or char16_t or char32_t         // character literal
 // template literal operator
 template<char...>
 constexpr int operator"" _b3();     // base 3, i.e., ternar y
-201_b3;                             // means operator"" b3<’2’,’0’,’1’>(); so 9*2+0*3+1 == 19
+201_b3;                             // means operator"" b3<’2’,’0’,’1’>(); so 9*2 + 3*0 + 1*1 == 19
 
 
 //---------- Method Pointers
@@ -925,19 +916,17 @@ T myT{}, *myTp{};                   // constructs an instance of T (with default
 
 //---------- Derived Class Definition
 // default access specifier for parents is private for classes and public for struct; non-public inheritance is rare
-class D: (virtual) <access_spec> B {...;};      // template for defining a Derived class; virtual Base class (p.389 professional c++, 5th edition)
+class D: (virtual) <access_spec> B {/*...*/};   // template for defining a Derived class; virtual Base class (p.389 professional c++, 5th edition)
 // members\access_spec  public      protected   private
 //  public               public      protected   private
 //  protected            protected   protected   private
 //  private              N/A         N/A         N/A
 
-class Foo final {...;};             // no class can inherit from Foo
+class Foo final {/*...*/};      // no class can inherit from Foo
 
-class Employee {...;};
-class Manager {                     // bad design!  Manager class contains Employee as a member data for 'is a relationship'
-    Employee emp;...;};
-class Manager: public Employee {    // good design! Manager class is derived from Employee class (would be bad if 'has a relationship')
-    ...;};
+class Employee {/*...*/};
+class Manager {Employee emp;/*...*/};       // bad design!  Manager class contains Employee as a member data for 'is a relationship'
+class Manager: public Employee {/*...*/};   // good design! Manager class is derived from Employee class (would be bad if 'has a relationship')
 
 Employee *pe = &mm;                 // mm is an instance of Manager, which is also an Employee
 Manager *pm = &ee;                  // error: ee is an instance of Employee, which is not a Manager
@@ -946,12 +935,12 @@ Manager *pm = &ee;                  // error: ee is an instance of Employee, whi
 //---------- Base Initialisers
 // objects are constructed bottom-up (base before member) and destructed top-down (member before base)
 // class can initialise its members and bases (but not directly members or bases of its bases)
-class B1 {B1();};           // has a default constructor
-class B2 {B2(int);          // does not have a default constructor
-class D1: B1, B2 {          // class with two base classes
-    D1(int i)               // constructor of the derived class
-        :B1{}, B2{i} {...;} // bases are initialised before and destroyed after members; B1 default constructor is called by default (can be ommited)
-    D1() :D1{0} {...;}      // delegating constructor, uses another constructor
+class B1 {B1();};               // has a default constructor
+class B2 {B2(int);              // does not have a default constructor
+class D1: B1, B2 {              // class with two base classes
+    D1(int i)                   // constructor of the derived class
+        :B1{}, B2{i} {/*...*/}  // B1 default constructor is called by default (can be ommited)
+    D1() :D1{0} {/*...*/}       // delegating constructor, uses another constructor
 };
 
 
@@ -962,24 +951,24 @@ class D1: B1, B2 {          // class with two base classes
 // avoid having different default values for base function and its derived override! (p.382 professional c++, 5th edition)
 class B {
     virtual void fct();             // a virtual function
-    virtual void fct0();            // a virtual function
-    virtual void fct0(int);         // a virtual function
-    virtual void fct1() const = 0;  // pure virtual functions do not need to be defined; virtual keyword is not repeated in the definition
-    virtual void fct2();            // virtual keyword is not repeated in the definition
+    virtual void fct0();            // ...virtual keyword is not repeated in the definition
+    virtual void fct0(int);
+    virtual void fct1() const = 0;  // pure virtual functions do not need to be defined
+    virtual void fct2();
     void fct3();                    // normal method, can't be overriden
 };
 
 class D: public B {
     using B::B;                         // explicitely inherits all the base constructors
-    using B::fct();                     // explicitely inherits all the overloads of the base method fct (here only one); changes access specifier
+    using B::fct;                       // explicitely inherits all the overloads of the base method fct (here only one); changes access specifier
     virtual void fct(int);              // adds a new overload of the inherited fct(), doing this is rare
     virtual void fct0(int) override;    // overriding one overloaded base method hids all other base overloads; i.e. fct0() no longer accessible
     using B::fct0();                    //  ...one needs to explicitely inherit the not overriden base overloads of fct0; not recommended
     virtual void fct1() const override; // same argument list needed; use of virtual is optional and override is optional but recommended
     final void fct2();                  // fct2 cannot be overriden
-    ...;};
+    /*...*/};
 
-D::D(const D &src) : B {src} {...;}     // copy constructor of D has to call the B's copy constructor (else B's dflt constructor is called -> wrong)
+D::D(const D &src) : B {src} {...;}     // copy ctor of D has to call the B's copy constructor (else B's dflt constructor is called -> wrong)
 D& D::operator=(const D &rhs) {         // assignment operator
     if (&rhs == this) {return *this;}
     B::operator=(rhs);                  // B's assignment operator has to be called (else only part of the object will be assigned)
@@ -992,40 +981,40 @@ D& D::operator=(const D &rhs) {         // assignment operator
 
 //---------- enable_shared_from_this<T>
 class X : public std::enable_shared_from_this<X> { }    // X is derived from enable_shared_from_this
-X.shared_from_this()                // returns shared_ptr if the instance has been stored in a shared pointer, else bad_weak_ptr exception is thrown
-X.weak_from_this()                  // teruns a weak_ptr if the instance has been stored in a shared pointer, else returns en empty weak_ptr
+X.shared_from_this()                // returns a shared_ptr if the instance has been stored in a shared ptr, else bad_weak_ptr exception is thrown
+X.weak_from_this()                  // returns a weak_ptr if the instance has been stored in a shared ptr, else returns en empty weak_ptr
 
 
 
 //==================== Namespaces
 
-namespace My_nspace {...;}  // namespace definition
-My_nspace::sth;             // refers to sth in the namespace My_nspace
-::sth;                      // refers to sth in the global namespace
+namespace My_nspace {/*...*/}   // namespace definition
+My_nspace::sth;                 // refers to sth in the namespace My_nspace
+::sth;                          // refers to sth in the global namespace
 
-namespace {...;}            // an unnamed namespace, accessible only from within the translation unit (usually the file where it is defined)
-                            // an unnamed namespace has implied using-directive
+namespace {/*...*/}             // an unnamed namespace, accessible only from within the translation unit (usually the file where it is defined)
+                                // an unnamed namespace has implied using-directive
 
-using std::string;          // use string to mean std::string, applies to all overloaded versions
-using namespace std;        // make every name from std accessible
+using std::string;              // use string to mean std::string, applies to all overloaded versions
+using namespace std;            // make every name from std accessible
 
-namespace s_lib = std;      // make namespace alias, usefull for long neasted namespaces like namespace sth = sth1::sth2::sth3;
+namespace s_lib = std;          // make namespace alias, usefull for long neasted namespaces like namespace sth = sth1::sth2::sth3;
 
-using namespace std;        // use standard library for everything but String (next line)
-using My_lib::String;       // use String from My_lib
-using M_str = My_lib::String// rename My_lib::String to M_str (alias)
+using namespace std;            // use standard library for everything but string (next line)
+using My_lib::string;           // use string from My_lib
+using M_str = My_lib::string    // rename My_lib::string to M_str (alias)
 
 namespace My_nspace {
-    inline namespace v3 {   // default meaning of the namespace My_nspace
+    inline namespace v3 {       // default meaning of the namespace My_nspace
         double f(double);
     }
-    namespace v2 {          // older namespace
+    namespace v2 {              // older namespace; example below
         double f(double);
-}}
-// example
+    }
+}
 using namespace My_nspace;
-f(1);                       // use the default f from My_nspace
-v2::f(1);                   // use the older f from the v2 namespace of My_nspace
+f(1);                           // use the default f from My_nspace
+v2::f(1);                       // use the older f from the v2 namespace of My_nspace
 
 
 
@@ -1033,14 +1022,14 @@ v2::f(1);                   // use the older f from the v2 namespace of My_nspac
 
 // to set custom program terminations when an exception is not caught see (p.505 professional c++, 5th edition)
 
-try {}                          // tries to perform the code in {}, if an exception is thrown the catch block
-catch (const e_type &e) {...;}  //  ...catches the exception of type e_type, and executes the code in {}; catching by reference prevents slicing
-catch (...) {}                  //  ...catches all possible exceptions
+try {}                              // tries to perform the code in {}, if an exception is thrown the catch block
+catch (const e_type &e) {/*...*/}   //  ...catches (by reference -> prevents slicing) the exception of type e_type, and executes the code in {}
+catch (...) {}                      //  ...catches all possible exceptions
 
 throw My_error { "msg" };       // throws an exception called My_error
-throw;                          // in the catch-block re-throws the caught exception; do not re-throw this way "throw e;" might cause slicing
+throw;                          // re-throws the caught exception in the catch-block; doing "throw e;" might cause slicing - not recommended!
 
-e.what()                        // returns const char* describing the exception
+e.what();                       // returns const char* describing the exception
 
 // function-try-blocks, can be used for constructors (p.530 professional c++, 5th edition)
 MyCls::MyCls()
@@ -1056,22 +1045,23 @@ template class Nspc::MyClass<type>;     // explicit instantiation; generates cod
 
 
 //---------- Definition
-template<typename T> class Vector {...;};   // specifies a parameter T of the declaration of a class; can have default value e.g. <typename T=int>
+template<typename T> class Vec {/*...*/};   // declares template param T in a class defn; can have default value e.g. <typename T=int>
 
-template<typename T>                        // specifies a parameter T of the declaration it prefixes (here a member function)
-Vector<T>::Vector() {...;}                  // definition of a member function (default constructor here) with a template T
-Vector::Vector() {...;}                     // same as above, only valid in the class definition (outside of the class <T> is required)
+template<typename T>                        // declares template param T (here a member function)
+Vec<T>::Vec() {/*...*/}                     // definition of a member function (default constructor here) with a template param T
+
+Vec::Vec() {/*...*/}                        // as above, only valid in the class definition (outside of the class template is required)
 
 template <typename T> template <typename E> // cannot be combined into template <typename T, typename E>; usually put on 2 lines
-Vector<T>::Vector(const Vector<E>& src)     // copy constructor for template class between different template types; e.g. T=double; E=int
+Vec<T>::Vec(const Vec<E>& src)              // copy constructor for template class between different template types; e.g. T=double; E=int
 
 explicit TmpltName(Params) -> ShouldBe;     // template deduction rules; explicit is optional
-Vector(const char*) -> Vector<string>;      // example of the above
-Vector myVec { "Hello" };                   // myVec will be of type Vector<string> not Vector<const char*>
+Vec(const char*) -> Vec<string>;            // example of the above
+Vec myVec { "Hello" };                      // myVec will be of type Vec<string> not Vec<const char*>
 
-template<typename type1, typename type2>    // specifies template parameters to be used by the function
-type1 fct(type1 a, type2 b) {...;}          // definition of the function (standard one)
-decltype(auto) fct(auto a, auto b) {...;}   // as above; no need for template<typename type1, typename type2> line
+template<typename type1, typename type2>    // declares template params to be used by the function
+type1 fn(type1 a, type2 b) {/*...*/}        // definition of the function (standard one)
+decltype(auto) fn(auto a, auto b) {/*...*/} // as above; no need for template<typename type1, typename type2> line
 
 // variable templatess
 template <typename T> constexpr T pi { T { 3.141592653589793238462643383279502884 } };
@@ -1079,28 +1069,31 @@ float piFloat { pi<float> };
 
 
 //---------- Non-Type Template Parameters
-// non-type tmplt params can be integral types, enums, pointers, and references; c++20 adds floating point nums and some (very restricted) classes
-template<typename T, int INT> class Vector {...;}           // Vector class defn with non-type param INT (e.g. used as a default length)
-template<typename T, int INT=32> class Vector {...;}        // as above but with a default falue
-Vector<int, 32> myVec;                                      // when instantiating, the non-type param needs to be constexpr
-template <typename T, const T DFLT = T{}> class Vector {};  // Vector class defn with a default element having a default value
-template <typename T, const T& DFLT> class Vector {};       // Vector class defn with a default element as ref. (with internal/external linkage)
+// non-type tmplt params can be integral types, enums, pointers, and references, c++20 adds flt. pt. types and some (very restricted) classes
+template<typename T, int INT> class Vec {/*...*/}       // Vec class defn with non-type param INT (e.g. used as a default length)
+template<typename T, int INT=32> class Vec {/*...*/}    // as above but with a default falue
+Vec<int, 32> myVec;                                     // when instantiating, the non-type param needs to be constexpr
+template <typename T, const T DFLT = T{}> class Vec {}; // class defn with a default element having a default value
+template <typename T, const T& DFLT> class Vec {};      // class defn with a default element as ref. (with internal/external linkage)
 
 
 //---------- Template Template Parameters
-template <..., template <TemplateTypeParams> class ParameterName, ...> class MyClass {};        // template template parameter definition
-template <..., template <TemplateTypeParams> typename ParameterName, ...> class MyClass {};     // alternative to the above
+template </*...,*/ template <TemplateTypeParams>    class ParameterName/*, ...*/> class MyClass {}; // template template parameter definition
+template </*...,*/ template <TemplateTypeParams> typename ParameterName/*, ...*/> class MyClass {}; // alternative to the above
 // example of a class that takes a parameter T and a container type with default being vector
-template <typename T, template <typename E, typename Allocator = std::allocator<E>> class Container = std::vector> class MyClass {};
+template <typename T,
+          template <typename E, typename Allocator = std::allocator<E>>
+          class Container = std::vector>
+class MyClass {};
 
 
 //---------- Function Objects
 template<typename T>
 class Less_than {                           // Function object, Less_than<int> lti{42};
-    const T val;                            // one can now compare int i with 42 like this: lti(i) <=> i<42
+    const T val;                            // one can now compare int i with 42 like this: lti(i) <==> i<42
     Less_than(const T& v): val{v}{}
-    bool operator()(const T& x) const{
-        return x<val;}  };
+    bool operator()(const T& x) const{return x<val;}
+}
 
 
 //---------- Variadic Templates
@@ -1108,25 +1101,24 @@ class Less_than {                           // Function object, Less_than<int> l
 template<typename T1, typename... Tn>       // a template function accepting an arbitrary number of atguments
 void f(T1 &&arg1, Tn... &&args) {           // Tn... indicates the rest of the passed list; args are forwarded, not copied
     g(forward<T1>(arg1));                   // apply fct g on head, i.e. the first passed element; g() taking no args required to stop recursion
-    f(forward<Tn>(args)...); }              // repeat the function f on the rest of the list (kinda recursion)
-
+    f(forward<Tn>(args)...);                // repeat the function f on the rest of the list (kinda recursion)
+}
 
 //---------- Aliases
-template<typename Key, typename Value>
-class Map{...;};                            // define generic Map<Key, Value>
-
-template<typename Value>
-using String_map = Map<string, Value>;      // define String_map<Value> = Map<string, Value>
-String_map<int> m;                          // m is a Map<string, int>
+template<typename Key, typename Value> class Map{/*...*/};          // define generic Map<Key, Value>
+template<typename Value> using StringMap = Map<string, Value>;      // define StringMap<Value> = Map<string, Value>
+StringMap<int> m;                                                   // m is a Map<string, int>
 
 
 //---------- Concepts c++20
-template <typename T> concept name = constrExpr;    // syntax for concepts; constrExpr must result in boolean value or be a requires expression
+// see also "Notes - C++ STD.cpp" -> TYPE & TYPE CHECKS -> concepts
+template <typename T> concept NAME = constrExpr;    // syntax for concepts; constrExpr must result in boolean value or be a requires expression
 requires (paramList) { requirements; }              // syntax for requires expression; paramList is optional; 4 types of requirements:
-{ expr }                                            //  ...simple; is an arbitrary expression statement
-{ typename expr }                                   //  ...type; starts with typename
-{ expr } noexcept -> typeConstr;                    //  ...compound; noexcept and typeConstr are optional; to check no-throw or return type of methods
-{ requires (paramList) { requirements; } };         //  ...nested; more requirements inside the requirement block.
+    { expr }                                        //  ...simple; is an arbitrary expression statement
+    { typename expr }                               //  ...type; starts with typename
+    { expr } noexcept -> typeConstr;                //  ...compound; noexcept and typeConstr are optional;
+                                                    //     ...used to check no-throw or return type of methods
+    { requires (paramList) { requirements; } };     //  ...nested; more requirements inside the requirement block.
 
 template <typename T> concept C1 = (sizeof(T) == 4);                                            // a concept with boolean constrExpr
 template <typename T> concept C2 = requires (T x) { x++; ++x; };                                // a simple req; T can be incremented
@@ -1146,11 +1138,10 @@ void fct(C2 auto t);                                        // as above; this is
 template<conceptName T> class ClassName {};                 // as above but for classes
 
 template <convertible_to<bool> T> void handle(const T& t);                              // argument to handle() has to be convertable to boolean
-template <typename T> requires convertible_to<T, bool> void process(const T& t);        // as above, different syntax
-template <C2 T> void process(const T& t);                                               // argument to process() has to be incrementable
-template <typename T> requires C2 void process(const T& t);                             // as above, different syntax
+template <typename T> requires convertible_to<T, bool> void handle(const T& t);         // as above, different syntax
+template <C2 T>                                              void process(const T& t);  // argument to process() has to be incrementable
+template <typename T> requires C2                            void process(const T& t);  // as above, different syntax
 template <typename T> requires (requires(T x) { x++; ++x; }) void process(const T& t);  // as above, but without the need to define C2
-template <typename T> requires (sizeof(T) == 4) void process(const T& t);               // same as C1
 
 //---------- Template Specialization and Recursion
 // Class Template Specialization; see (p.442 professional c++, 5th edition)
@@ -1169,18 +1160,18 @@ int x = 1;      // definition of x
 extern int x;   // declaration of x already defined in file1.cpp
 extern int y=1; // definition of y, extern is ignored
 
-// translation unit is the result of preprocessing (think of is as of the source file)
-// internal/external linkage, i.e. (un)accessibility from other translation units
-static int x1=1;            // static implies internal linkage
+// translation unit is the result of preprocessing (think of the source file)
+// internal/external linkage, i.e. (in)accessibility from other translation units
 static, const, constexpr    // all three have internal linkage
+static int x1=1;            // example of the above
 extern const char x3 = 'a'  // extern const implies external linkage
 // effect of using unnamed namespace is very similar to that of internal linkage
 
 #include <iostream>     // including standard library header
 #include "my_header.h"  // including file from the current directory
 
-extern "C" int f();     // extern "C" specifies the linkage directive for using with C-compilers, not semantics (type-checking, etc.)
-extern "C" {...;}       // can contain multiple declarations
+extern "C" int f();     // extern "C" specifies the linkage directive for using with C-compilers, no semantics (type-checking, etc.)
+extern "C" {/*...*/}    // can contain multiple declarations
 
 
 //---------- Programs

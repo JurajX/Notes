@@ -22,7 +22,7 @@
 //      multimap
 //      set
 //      multiset
-//   Unrdered Associative Containers (Hash Tables)
+//   Unordered Associative Containers (Hash Tables)
 //      unordered_map
 //      unordered_multimap
 //      unordered_set
@@ -132,8 +132,8 @@
 
 begin(), end();         // [begin, end); non-const; iter points to the first/one-past-last element; op++ moves forward
 cbegin(), cend();       // [begin, end); const; iter points to the first/one-past-last element; op++ moves forward
-rbegin(), rend();       // [begin, end); reverse; iter points to the last/one-before-first element; op++ moves backwards
-crbegin(), crend();     // [begin, end); const reverse; iter points to the last/one-before-first element; op++ moves backwards
+rbegin(), rend();       // (rend, rbegin]; reverse; iter points to the last/one-before-first element; op++ moves backwards
+crbegin(), crend();     // (rend, rbegin]; const reverse; iter points to the last/one-before-first element; op++ moves backwards
 distance();             // returns the distance between two iterators
 
 inserter()              // returns insert_iterator of the passed container
@@ -242,7 +242,7 @@ b.flip(3);
 
 
 //==================== span c++20
-#include <span>          // allows for writing functions accepting vectors, arrays and c-stype arrays, views, subviews
+#include <span>         // allows for writing functions accepting vectors, arrays and c-stype arrays, views, subviews
 
 
 
@@ -260,7 +260,7 @@ arr.swap(other);                    // runs in O(n) time (for vector it's O(1));
 
 
 //==================== vector
-#include <vector>                                        // template <class T, class Allocator = std::allocator<T>> class vector;
+#include <vector>                                       // template <class T, class Allocator = std::allocator<T>> class vector;
 vector<int> v1 {1,2,3};                                 // vec initialisation; compatible with CTAD (class template argument deduction)
 vector<int> v2(11);                                     // size 11, all elements equal to 0
 vector<int*> v2(11);                                    // size 11, all elements equal to nullptr
@@ -306,7 +306,8 @@ vector<int>::iterator, vector<int>::const_iterator;     // type (const) iterator
 
 
 //==================== deque
-#include <deque>                 // similar functionality as vector (but not contiguous in memory, no reserve or capacity fcts)
+#include <deque>                 // similar functionality as vector (but not contiguous in memory, implemented as chunks of vectors)
+                                 // ...https://stackoverflow.com/questions/6292332/what-really-is-a-deque-in-stl
 
 // additional functions
 deq.push_front(elem);           // adds elem to the front of deq
@@ -316,21 +317,18 @@ deq.pop_front();                // removes the first element of deq; the element
 
 
 //==================== forward_list
-#include <forward_list>  // a singly-linked list; no way to go to the previous elem -> modifying ops need open range (one-before-first, one-past-last)
+#include <forward_list>  // a singly-linked list; modifying ops need open range (one-before-first, one-past-last)
 
-flst.before_begin();    // returns an iterator pointing to an imaginary element before  the beginning of the list;
+flst.before_begin();    // returns an iterator pointing to an imaginary element before the beginning of the list;
 
 
 
 //==================== list
-#include <list>                                          // a doubly-linked list; similar functions as vector
+#include <list>                                         // a doubly-linked list; similar functions as vector
 lst.begin(); lst.end();                                 // returns an iterator to the first element/one-past-last element
-
+                                                        // ...also and c-, r- and cr- versions;
 lst.front();                                            // access the first element
 lst.back();                                             // access the last element
-
-lst.begin(), lst.end();                                 // return iterators; also and c-, r- and cr- versions;
-
 lst.insert(it, element);                                // adds an element before the element referred by the it
 lst.erase(it);                                          // removes the element referred by the it
 
@@ -385,7 +383,7 @@ m.contains(key);                // returns bool;
 m[key] = val;                   // assignes new value to m[key] or creates a new pair
 m.insert({key, val});           // returns pair(it, bool) where it points to m[key]; does not overwrite existing key in which case bool == false
 m.insert_or_assign(key,val);    // as above, the ret.second==true if inserted, ==false if overwritten
-m.emplace(args);                // constructs element in-place, if key does not exist (val might be constructed, in later case imediately destroyed)
+m.emplace(args);                // constructs element in-place for non-existing key; val might be constructed, in later case imediately destroyed
 m.try_emplace(args);            // inserts in-place if the key does not exist, does nothing if the key exists
 
 m.erase(it); m.erase(key);      // erases the element pointed to by it/having the specified key
@@ -413,7 +411,7 @@ equal_range(key);       // returns (a pair) a range of elements matching a speci
 
 
 
-//±±±±±±±±±±±±±±±±±±±±±±±±±±±±±± Unrdered Associative Containers (Hash Tables)
+//±±±±±±±±±±±±±±±±±±±±±±±±±±±±±± Unordered Associative Containers (Hash Tables)
 
 // Hash fcts are provided for: primitive data types: bool, char, int, float, double, ...
 // Hash fcts are provided for: error_code, error_ condition, optional, variant, bitset,
@@ -453,8 +451,8 @@ unordered_map<string, int> my_Umap;                     // creates a unsorted ma
 find(it_b, it_e, val);              // returns the first elem s.t. elem == val in range [it_b, it_e); if not found it_e is returned
 find_if(it_b, it_e, pred);          // as above, but pred(elem) == ture
 find_if_not(it_b, it_e, pred);      // as above, but pred(elem) == false
-n = count(it_b, it_e, val);         // n is the number of elem == val in range [it_b, it_e)
-n = count_if(it_b, it_e, pred);     // n is the number of pred(elem) == true in range [it_b, it_e)
+count(it_b, it_e, val);             // returns the number of elem == val in range [it_b, it_e)
+count_if(it_b, it_e, pred);         // returns the number of pred(elem) == true in range [it_b, it_e)
 
 //----- Functions (accepting iterators) and Funciton-like entities (accepting ranges)
 // Modifying sequence operations
@@ -484,7 +482,7 @@ accumulate(it_b, it_e, init, op)    // sums up a range of elements
 // EXECUTION POLICY TYPE        GLOBAL INSTANCE     DESCRIPTION
 //  sequenced_policy             seq                 not allowed to parallelize or vectorize its execution
 //  parallel_policy              par                 allowed to parallelize but not vectorize its execution
-//  parallel_unsequenced_policy  par_unseq           allowed to parallelize and vectorize its execution; and to migrate its execution across threads
+//  parallel_unsequenced_policy  par_unseq           allowed to parallelize and vectorize its execution
 //  unsequenced_policy           unseq               allowed to vectorize but not parallelize its execution
 
 
@@ -548,8 +546,7 @@ strcmp(a, b)            // three-way compares two c-strings 'a' and 'b'; returns
 
 
 //==================== charconv
-#include <charconv>     // converts character sequences to integral of floation values and vice versa
-from_chars_result from_chars(f, l, val, base=10);  // [f, l) converted and saved in 'val'; conversion not possible 'val' is unchanged
+#include <charconv>     // converts character sequences to integral of floating values and vice versa
 
 
 
@@ -643,7 +640,7 @@ setbase(int N);                     // sets the base for numbers
 setfill(char c);                    // fills the empty spaces with character c
 setprecision(int N);                // sets the precision to N
 setw(int N);                        // sets the width parameter to N
-put_money; put_time;                // formats and outputs a monetary value; formats and outputs a date/time value according to the specified format
+put_money; put_time;                // formats and outputs a monetary value, date/time value according to the specified format
 get_money; get_time;                // parses a monetary value; parses a date/time value of specified format
 
 
@@ -660,7 +657,7 @@ skipws, noskipws;                   // controls whether leading whitespace is sk
 
 
 //==================== sstream
-#include <sstream>
+#include <sstream>                  // string stream
 
 ostringstream o_stream;
 o_stream << "text " << "text";      // ussage as o streams
@@ -670,7 +667,7 @@ i_stream >> var1 >> var2;           // ussage as i streams
 
 
 //==================== fstream
-#include <fstream>
+#include <fstream>                  // file stream
 ofstream o_file {"path/to/file", MODE };
 ifstream i_file {"path/to/file", MODE };
 fstream io_file {"paht/to/file", MODE };
@@ -698,7 +695,7 @@ ios_base::cur;                      // current position in the stream
 
 
 //==================== syncstream c++20
-#include <syncstream>
+#include <syncstream>               // synchronised stream
 osyncstream syncCout { cout };      // creates a synced cout stream; guarantees thread safe behaviour (no interleaved outputs)
 syncCout << "message" << endl;      // ussage as cout; all text is outputed at once at the time of destruction of syncCout
 
@@ -894,6 +891,7 @@ conditional<B, T, F>;           // chooses one type or another based on compile-
 template <class T> T f(T i) { static_assert(std::is_integral<T>::value, "Integral required."); return i; }  // checks if T is integral
 
 
+
 //==================== typeinfo
 #include <typeinfo>
 std::typeid(CLS)                            // returns type ID of a class, only for classes with vtable; (at least one virtual method)
@@ -967,14 +965,15 @@ mem = nullptr;
 //==================== new
 #include <new>
 
-void myHandler() {};                                    // has to free some memory or throw; else infinite loop (p.524 professional c++, 5th edition)
-new_handler oldHandler { set_new_handler(myHandler) };  // sets a handler for mem alloc errors from new and stores the old one
+void hndlr() {};                                    // has to free some memory or throw; else infinite loop (p.524 professional c++, 5th edition)
+new_handler oldHandler { set_new_handler(hndlr) };  // sets a handler for mem alloc errors from new and stores the old one
 
 hardware_destructive_interference_size; // const specifying the min offset between two concurrently accessed objects to avoid cache line sharing
 
 
+
 //==================== memory_resource
-#include <memory_resource>      // if tow containters have different allocators, they are a different classes and can't be assigned to each other
+#include <memory_resource>      // if two containters have different allocators, they are a different classes and can't be assigned to each other
 
 pmr::polymorphic_allocator;     // makes possible to make common allocators so the above problem is solved
 
@@ -1147,7 +1146,7 @@ cmp_greater(), cmp_greater_equal()
 
 
 //==================== functional
-#include <functional>       // implements functin objects for std algorithms (e.g. compareisoins, or plus, multiplies)
+#include <functional>           // implements functin objects for std algorithms (e.g. compareisoins, or plus, multiplies)
 
 reference_wrapper<type>         // used to store references in containers
 ref(obj); cref(obj);            // returns reference_wrapper<type_of_obj> to obj;
@@ -1326,11 +1325,11 @@ using result = ratio_add<r1, r2>::type; // defines a result of r1 + r2 and norma
 
 //---------- thread
 // destruction of a joinable thread terminates the application
-// to cancell running threads, use jthread or a shared variable that is periodically checked;
-thread t {f}, t {f, a1, a2};    // f()/f(a1, a2) runs in another thread; can be fct, fctobj, lambda; all args/fctobj are copied; use ref() or cref()
+// to cancel running threads, use jthread or a shared variable that is periodically checked;
+thread t {f}, t {f, a, b};      // f()/f(a, b) runs in another thread; can be fct, fctobj, lambda; all args/fctobj are copied; use ref() or cref()
 thread t { &Cls::met, &inst };  // executes inst.met() in another thread; data races possible as no copy is made
-t.join();                       // blocks the current thread until '*this' finishes; concurrent call (on same thread) is a data race (undef behavior)
-t.detach();                     // separates '*this' from the current thread, execution continues independently; after *this no longer owns any thread
+t.join();                       // blocks the current thread until '*this' finishes; concurrent calls (on same thread) is a data race
+t.detach();                     // separates '*this' from the current thread, execution continues independently; '*this' no longer owns any thread
 
 t.id;                       // represents the id of the thread
 t.joinable();               // checks whether the t is joinable, i.e. potentially running in parallel context
@@ -1395,7 +1394,7 @@ a.wait(old);                                // blocks the thread until notified 
 a.notify_one();                             // notifies at least one thread waiting on the atomic object; c++20
 a.notify_all();                             // notifies all threads blocked waiting on the atomic object; c++20
 
-atomic_ref<T> ar { obj };                   // ref to an obj; interface as atomic<T>; one is not allowed to touch obj as far as an atomic_ref exists
+atomic_ref<T> ar { obj };                   // ref to an obj; interface as atomic<T>; not allowed to touch obj as far as an atomic_ref exists
 
 //---------- atomic_flag
 atomic_flag af = ATOMIC_FLAG_INIT;  // uniform initialisation is not allowed here
@@ -1414,7 +1413,7 @@ af.notify_all();                    // notifies all threads blocked waiting on t
 
 //---------- mutex
 mutex m;                        // mutual exclusion object
-m.lock();                       // locks the mutex, blocks if the mutex is not available; owning thread is not allowed to call thisa again
+m.lock();                       // locks the mutex, blocks if the mutex is not available; owning thread is not allowed to call this again
 m.try_lock();                   // tries to lock the mutex, returns if the mutex is not available; owning thread is not allowed to call this again
 m.unlock();                     // unlocks the mutex
 
@@ -1508,6 +1507,7 @@ notify_all_at_thread_exit(cv, lck); // schedules a call to notify_all to be invo
 std::mutex m;
 std::condition_variable cv;
 bool ready = false;
+bool processed = false;
 
 void worker_thread() {
     // Wait until main() sends data
@@ -1620,9 +1620,9 @@ pt.reset()                          // resets the state abandoning any stored re
 //---------- ussage of packaged task
 T f(R, S);
 packaged_task<T(R, S)> pt { f };    // creates a packaged task to run the function f
-auto tur { pt.get_future() };       // returns the future for the result of the pt
+auto fut { pt.get_future() };       // returns the future for the result of the pt
 thread t { move(pt), arg1, arg2 };  // creates a thread, moves pt into it, and executes pt with arg1 and arg2
-int result { theFuture.get() };     // gets the result
+int result { fut.get() };           // gets the result
 t.join();
 
 //---------- functions

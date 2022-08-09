@@ -11,13 +11,14 @@ dim3 blocks3D(5, 5, 5);     // makes 3D block
 
 
 // ========== Streams ==========
-cudaStream_t Stream;                                // declaration of a stream pStream
+cudaStream_t *pStream;                              // declaration of a stream pStream
 
 cudaStreamCreate(cudaStream_t* pStream);            // creates an asynchronous stream and stores it in pStream
 
 cudaStreamCreateWithFlags(cudaStream_t* pStream,    // creates an asynchronous stream with flags and stores it in pStream
                           unsigned int  flags);     // cudaStreamDefault: default stream creation flag
-                                                    // cudaStreamNonBlocking: work running in the created stream may run concurrently with stream 0 (the NULL stream), and no implicit synchronization with stream 0 is performed
+                                                    // cudaStreamNonBlocking: work running in the created stream may run concurrently with
+                                                    //  ...stream 0 (the NULL stream), and no implicit synchronization with stream 0 is performed
 
 cudaStreamCreateWithPriority(cudaStream_t* pStream, // creates an asynchronous stream with the specified priority
                              unsigned int  flags,   // as above
@@ -69,13 +70,18 @@ cudaHostAlloc(void** h_ptrptr, size_t size,             // allocates pinned/page
               unsigned int flags);                      // cudaHostAllocDefault: emulates cudaMallocHost()
                                                         // cudaHostAllocPortable: considered as pinned memory by all CUDA contexts
                                                         // cudaHostAllocMapped: maps the allocation into the CUDA address space
-                                                        // cudaHostAllocWriteCombined: write-combined (WC) memory, can be transferred across the PCI Express bus more quickly, but cannot be read efficiently by most CPUs; a good option for buffers that will be written by the CPU and read by the device via mapped pinned memory or host->device transfers.
+                                                        // cudaHostAllocWriteCombined: write-combined (WC) memory, can be transferred across
+                                                        //  ...the PCI Express bus more quickly, but cannot be read efficiently by most CPUs;
+                                                        //  ...a good option for buffers that will be written by the CPU and read by the device
+                                                        //  ...via mapped pinned memory or host->device transfers.
 
 cudaHostRegister(void* h_ptr, size_t size,              // registers an existing host memory range for use by CUDA
                  unsigned int  flags);                  // cudaHostRegisterPortable: considered as pinned memory by all CUDA contexts
                                                         // cudaHostRegisterMapped: maps the allocation into the CUDA address space
-                                                        // cudaHostRegisterDefault: system with unified virtual addressing -> mapped and portable; system with no unified virtual addressing -> neither mapped nor portable
-                                                        // cudaHostRegisterIoMemory: the passed memory pointer is treated as pointing to some memory-mapped I/O space, and it will marked as non cache-coherent and contiguous
+                                                        // cudaHostRegisterDefault: system with unified virtual addressing -> mapped and
+                                                        //  ...portable; system with no unified virtual addressing -> neither mapped nor portable
+                                                        // cudaHostRegisterIoMemory: the passed memory pointer is treated as pointing to some
+                                                        //  ...memory-mapped I/O space, and it will marked as non cache-coherent and contiguous
 
 cudaHostGetDevicePointer(void** d_ptrptr, void* h_ptr,  // returns d_ptr of mapped host memory obtained by cudaHostAlloc or cudaHostRegister
                          unsigned int  flags);          // for future releases
@@ -91,7 +97,7 @@ __host__            // declares host function, which is called and executed on h
 __noinline__        // to avoid inlining
 __forceinline__     // to force inlining
 
-__global__ void kernel(float* d_out, float* d_in) {...};   // declaration specifier __global__ used to tell cuda it's a kernel not a normal code
+__global__ void kernel(float* d_out, float* d_in) {/*...*/};    // specifier __global__ says it's a cuda kernel not a normal code
 
 
 
@@ -136,8 +142,9 @@ atomicXor(TYPE* address, TYPE val);     // TYPE in {int, unsigned int, unsigned 
 
 
 // ========== Launching Functions/Kernels ==========
+
+__global__ void kernel(float* d_out, float* d_in) {/*...*/};
 dim3 gridDim( mx, my, mz );
 dim3 blockDim( nx, ny, nz );
 kernel<<< gridDim, blockDim >>>(d_out, d_in);           // d_out, d_in are both variables living in the global GPU memory
-
-kernel<<<gridDim, blockDim, sh_memSize, stream>>>();    // signature of kernel launch
+kernel<<< gridDim, blockDim, sh_memSize, stream >>>();  // signature of kernel launch

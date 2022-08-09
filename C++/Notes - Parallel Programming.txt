@@ -13,7 +13,7 @@ nvcc file.cu    // simple compilation of a file
 
 
 ========== GPU Architecture ==========
-Thread       - is a simple progrram run on GPU
+Thread       - is a simple program run on GPU
 Thread block - groups of threads cooperating to solve a sub-problem
 
 SM  - Stream Multiprocessors, is a number of simple processors and memories that run threads
@@ -151,8 +151,8 @@ Sparse Matrix Multiplication by Vector
 
 
 ========== Optimisation ==========
-Weak Scaling    - solve a bigger problem (fixed problem size per core)
-Strong Scaling  - solve a problem faster (fixed total problem size)
+Weak Scaling    - solve a bigger problem (fixed problem size per core) - speed-up = serial + parallel × #processors         (Gustafson’s law)
+Strong Scaling  - solve a problem faster (fixed total problem size)    - speed-up = 1 / (serial + parallel / #processors)   (Amdahl’s law)
 
 Hotspot (bottleneck) understangind
     - run a profiler (Gproof, Vtune, VerySleepy) to understand which function takes most of the time
