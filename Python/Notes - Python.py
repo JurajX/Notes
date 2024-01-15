@@ -43,7 +43,7 @@
 # import module  # calling: module.fct(), module.var
 # import module as m            # call the module m; calling: m.fct(), m.var
 # from module import f, var     # import f and var; calling: f(), var
-# from module import f as ff    # import f and call it ff; calling g()
+# from module import f as ff    # import f and call it ff; calling ff()
 # from module import *          # bad: import all from module; calling f()
 import collections
 import datetime
@@ -52,7 +52,6 @@ import json
 import logging
 import os
 import random
-import unittest
 
 import PIL
 
@@ -106,7 +105,7 @@ else:                           # else
 # ========== LOOPS ==========
 for i in range(5):              # loops i over [0,1,2,3,4]
     if COND1:
-        break                   # breaks any loop instantly
+        break                   # breaks a loop instantly
     continue                    # returns at the beginning of the loop
 else:                           # executed at the end of the for loop, if brake (or return) was not hit; i.e. 'no break' statement
     pass
@@ -154,12 +153,12 @@ person = {'name': 'J', 'age': 18}
 '{name}, {age}'.format(**person)            # r: "J, 18"
 '{0.name}, {0.age}'.format(p_cls)           # ...as above; p_cls is class with attr name and age
 
-pi_di = 314
-'{:05,}'.format(pi_di)          # r: '03141'
-'{:,}'.format(pi_di)            # r: '3,141'
+pi_di = 3141
 '{:07,}'.format(pi_di)          # r: '003,141'
+'{:03,}'.format(pi_di)          # r: '3,141'
+'{:,}'.format(pi_di)            # r: '3,141'
 pi = 3.14159265359
-'{:.Xf}'.format(pi)             # r: '3.14159'
+'{:.5f}'.format(pi)             # r: '3.14159'
 
 # f-strings work exactly as '.format(...)', including number padding etc.;
 f'pi: {pi_di}'                  # r: 'pi: 3141'; variables can be directly placed inside
@@ -588,7 +587,7 @@ random.randint(a, b)            # r: random int from [a,b]
 random.choice(lst)              # r: random element from lst
 random.choices(                 # r: k random elems from lst (with replacement) weighted with probs
     lst,                        # ...
-    weights=probs,              # ...unnormalised probabilities
+    weights=probs,              # ... unnormalised probabilities
     k=10)                       # ... number of elements drawn
 random.sample(lst, k=5)         # r: k random sampled elems from lst (without replacement)
 random.shuffle(lst)             # randomly shuffle lst in place

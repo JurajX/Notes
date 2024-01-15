@@ -185,10 +185,10 @@ addopts = OPT                            # adds pytest options by default; e.g. 
 markers =
     smoke:explanation                   # silences warning from custom markers
 
-minversion = ​X.X​                        # minimum version for pytest
+minversion = X.X                        # minimum version for pytest
 norecursedirs = XXX                     # recursive test discovery omits XXX dir, dftl: *.egg .* _darcs build CVS dist node_modules venv {arch}
-testpaths = ​tests​                       # where to look for tests
-python_classes = ​XXX                    # changes the naming convention for test classes; default: Test*
+testpaths = tests                       # where to look for tests
+python_classes = XXX                    # changes the naming convention for test classes; default: Test*
 python_files = XXX                      # changes the naming convention for test files; default test_* *_test
 python_functions = XXX                  # changes the naming convention for test functions; default test_*
 xfail_strict = true                     # makes passing tests marked with xfail as failed instead of XPASS
