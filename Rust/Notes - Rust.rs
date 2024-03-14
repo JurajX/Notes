@@ -1,4 +1,7 @@
+https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
+
 //==================== ==================== ToC
+// === Crates and Modules
 // === Printing Macros
 // === Declarations
 // === Expressions and Statements
@@ -25,9 +28,34 @@
 // === Keywords
 
 
+//==================== Crates and Modules
+// A crate      - the smallest amount of code that the Rust compiler considers at a time. There are Binary and Library crates.
+// A package    -  a bundle of one or more crates, contains a Cargo.toml file that describes how to build those crates, can contain many binary crates, but at most one library crate.
+// src/main.rs  - same name binary crate
+// src/lib.rs   - same name library crate
+// src/bin/     - other binary crates
+
+// compiling strategy:
+// - start from the crate root, src/main.rs or src/lib.rs
+// - declared modules in the root, e.g.
+//   - mod garden{...} (with the code in the braces), or
+//   - mod garden; that searches for file src/garden.rs or src/garden/mod.rs
+// - declared sub-modules in modules, e.g.
+//   - mod vegetables{...}, or
+//   - mod vegetables; taht searches for src/garden/vegetables.rs or src/garden/vegetables/mod.rs
+// - paths to code in modules e.g. crate::garden::vegetables::Asparagus if there is a type Asparagus in vegetables
+// - private vs public:
+//   - code within a module is private; to make a module public, declare it with pub mod instead of mod;
+//   - items within a public module are private; to make them public, use pub before their declarations
+// - the use keyword, write use crate::garden::vegetables::Asparagus; to be able to omit the namespace of Asparagus
+
+
+
 //==================== Printing Macros
 println!("{} < {}", 10, 20);        // prints "10 < 20" to stdout
 dbg!("haha");                       // prints debug info to stderr, takes and returns ownership, unless passed by reference
+
+
 
 //==================== Declarations
 let var:type;               // declares an immutable var of type (can be assigned only once)
