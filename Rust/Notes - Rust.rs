@@ -1,59 +1,36 @@
-https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
-
 //==================== ==================== ToC
-// === Crates and Modules
-// === Printing Macros
-// === Declarations
-// === Expressions and Statements
-// === Type Aliases
-// === Integer
-// === Floats
-// === Boolean
-// === Character
-// === Tuple
-// === Arrays, Vectors, Slices
-// === String Types
-// === References
-// === Box and Reference Counts
-// === Raw Pointers
-// === Functions
-// === Ownership
-// === Structs
-// === Enums
-// === Optionals and Errors
-// === Pattern Matching
-// === Traits
-// === Statements
-// === Operators
-// === Keywords
-
-
-//==================== Crates and Modules
-// A crate      - the smallest amount of code that the Rust compiler considers at a time. There are Binary and Library crates.
-// A package    -  a bundle of one or more crates, contains a Cargo.toml file that describes how to build those crates, can contain many binary crates, but at most one library crate.
-// src/main.rs  - same name binary crate
-// src/lib.rs   - same name library crate
-// src/bin/     - other binary crates
-
-// compiling strategy:
-// - start from the crate root, src/main.rs or src/lib.rs
-// - declared modules in the root, e.g.
-//   - mod garden{...} (with the code in the braces), or
-//   - mod garden; that searches for file src/garden.rs or src/garden/mod.rs
-// - declared sub-modules in modules, e.g.
-//   - mod vegetables{...}, or
-//   - mod vegetables; taht searches for src/garden/vegetables.rs or src/garden/vegetables/mod.rs
-// - paths to code in modules e.g. crate::garden::vegetables::Asparagus if there is a type Asparagus in vegetables
-// - private vs public:
-//   - code within a module is private; to make a module public, declare it with pub mod instead of mod;
-//   - items within a public module are private; to make them public, use pub before their declarations
-// - the use keyword, write use crate::garden::vegetables::Asparagus; to be able to omit the namespace of Asparagus
-
-
-
-//==================== Printing Macros
-println!("{} < {}", 10, 20);        // prints "10 < 20" to stdout
-dbg!("haha");                       // prints debug info to stderr, takes and returns ownership, unless passed by reference
+// - Declarations
+// - Expressions and Statements
+// - Type Aliases
+// - Integer
+// - Floats
+// - Boolean
+// - Character
+// - Tuple
+// - References
+// - Box and Reference Counts
+// - Raw Pointers
+// - Ranges
+// - Iterators
+// - Arrays, Slices
+// - Vectors
+// - String Types
+// - HashMap
+// - Entry
+// - Macros
+// - Functions
+// - Ownership
+// - Structs
+// - Enums
+// - Result
+// - Generics (Templates)
+// - Traits
+// - Option
+// - Statements
+// - Lifetimes
+// - Packages & Crates
+// - Operators
+// - Keywords
 
 
 
@@ -72,7 +49,7 @@ const CONST:type = 3.14;    // declares an immutable constant; type cannot be om
 
 //==================== Expressions and Statements
 4 + 5               // is an expression; returns a value
-4 + 5;              // is a statement; does not return a value
+4 + 5;              // is astatement; does not return a value
 let x = 4 + 5;      // is a statement; does not return a value
 
 {                   // start of a block
@@ -90,8 +67,8 @@ type Bytes = Vec<u8>;       // defines alias for Vec<u8>; same as typedef in c++
 //==================== Integer
 //---------- types
 // i32 is the default
-i8, i16, i32, i64, i128     // 8-bit, 16-bit, 32-bit, 64-bit, 128-bit, architecture size signed integers
-u8, u16, u32, u64, u128     // 8-bit, 16-bit, 32-bit, 64-bit, 128-bit, architecture size unsigned integers
+i8, i16, i32, i64, i128     // 8-bit, 16-bit, 32-bit, 64-bit, 128-bit
+u8, u16, u32, u64, u128     // 8-bit, 16-bit, 32-bit, 64-bit, 128-bit
 isize, usize                // architecture size (the same size as an address) signed and unsigned integer
 
 //---------- literals
@@ -104,7 +81,8 @@ isize, usize                // architecture size (the same size as an address) s
 
 //---------- byte (u8) literals
 b'A'        // byte literals of type u8 (only for ASCII)
-            // special byte literals
+
+//--- special byte literals
 b'\''       // Single quote     39u8
 b'\\'       // Backslash        92u8
 b'\n'       // Newline          10u8
@@ -112,8 +90,8 @@ b'\r'       // Carriage return  13u8
 b'\t'       // Tab               9u8
 
 //---------- declarations
-let int: u32 = 0xf;        // int is 15
-let mut int: u8 = 0xf;     // int is mutable and equal to 15
+let int: u32 = 0xff;        // int is 15
+let mut int: u8 = 0xff;     // int is mutable and equal to 15
 
 //---------- members
 // XXX can be add, sub, mul, div, rem, neg, abs, pow, shl, shr
@@ -169,7 +147,7 @@ let mut b = false;          // b is mutable and equal to false
 char                        // unicode 32-bit wide; ranges from U+0000 to U+D7FF and U+E000 to U+10FFFF inclusive
 
 //---------- declarations
-let ch: char = 'A';         // ch is a 32-bit long character holding letter A
+let ch: char = 'A';         // cha is a 32-bit long character holding letter A
 let mut ch = 'B';           // as above, just mutable and holding B
 
 
@@ -189,59 +167,6 @@ let tup: () = ();                           // a special tuple called 'unit'; re
 
 
 
-//==================== Arrays, Vectors, Slices
-//---------- types
-[T; N];                     // type denoting a const size array of length N with values of type T
-Vec<T>;                     // dynamically allocated sequence with values of type T
-&[T], &mut [T];             // (mutable) slice of a sequence container (vector, array, string, etc.)
-
-//---------- declarations
-let v: [i32; 2] = [1, 2];           // declaration of an array holding [1, 2]
-let v: [i32; 2] = [5; 2];           // declaration of an array holding [5, 5]
-let v: Vec = Vec::<i32>::new();     // creates an empty vector of type i32
-Vec::<i32>::with_capacity(N);       // use to allocate capacity at creation
-let v: Vec<i32> = (1..2).collect(); // creates a vector containing [1, 2]
-let v: Vec<i32> = vec![1, 2];       // creates a vector containing [1, 2]
-let v: Vec<i32> = vec![5; 2];       // creates a vector containing [5, 5]
-let vr: &[i32] = &v[1..3];          // creates a slice of length 2, starting at 1-st (0-indexed) element
-let vr: &[i32] = &v[1..v.len()];    // creates a slice starting at 1-st (0-indexed) element
-let vr: &[i32] = &v[1..];           // as above
-let vr: &[i32] = &v;                // creates a slice starting at 0-th (0-indexed) element
-let vr: &[i32] = &v[..];            // as above
-
-//---------- indexing
-v[i];                       // i-th element of v; i must be 'usize' and in [ 0, v.len() - 1 ]
-
-
-
-//==================== String Types
-// stored in memory as UTF-8 with variable-width encoding
-
-//---------- types
-String;                     // dyn. sized heap string (i.e. Vec<u8> guaranteed to hold well-formed UTF-8 chars)
-&str;                       // ref. to a UTF-8 (i.e. &[u8] guaranteed as above); can be ref to a string literal living in read-only memory
-&mut str;                   // exists but can't modify the strings; only make_ascii_uppercase and make_ascii_lowercase are allowed
-
-//---------- declarations
-let s = String::from("hi"); // creates a String
-let s = "hi".to_string();   // converts &str to String
-
-let s = "Hi, world!";       // defines a string literal saved in read-only memory with the code
-let s:&str = "Hi, world!";  // as above
-let ss: &str = s[0..1];     // slice (reference to the original) containing "H"
-let s: &[u8; 3] = b"GET";   // byte string; use br"text" for raw byte strings
-
-
-//---------- ways to create string
-"\"Ouch!\" he said.\n";     // classic escaping of characters
-"line 1,
-    line 2 with spaces";    // new line character and leading white spaces are included
-"line 1\
-    still line 1"           // new line character and leading white spaces are dropped
-r"raw string";              // everything inside is included verbatim; r##"alternative with # signs"##
-
-
-
 //==================== References
 // non-owning pointers that must not outlive their referent
 //---------- types
@@ -250,13 +175,14 @@ r"raw string";              // everything inside is included verbatim; r##"alter
 
 //---------- declarations
 let r: &T = &x;             // r stores a reference to the variable x
+let mut r: &T = &x;         // as above, but r is mutable (i.e. can be reassigned)
+let r: &mut T = &mut x;     // r stores a mutable reference to the variable x
+let mut r: &mut T = &mut x; // r is mutable and stores a mutable reference to the variable x
 let rr: &&T = &r;           // rr stores a reference to a reference to variable x; can be chained undefinitely
 *r;                         // dereferencing a reference
 r.member;                   // the dot operator automatically dereferences the reference; i.e. (*r).member
 r1 == r2; rr1 == rr2;       // both compare values (as many dereferences as needed are applied); to compare addresses use std::ptr::eq
 r1 == rr1;                  // this is not allowed
-
-//----------
 
 
 
@@ -271,7 +197,7 @@ std::rc::Weak<T>;           // weak pointer; (weak_ptr)
 let t = (12, "eggs");       // defines a tuple
 let b = Box::new(t);        // allocates a tuple on the heap
 
-let s: Rc<String> = Rc::new("str".to_string()); // creates a string rc pointer; read-only; behaves as a variable
+let s: Rc<String> = Rc::new("str".to_string()); // creates a string rc pointer; read-only; behaves like a variable
 let t: Rc<String> = s.clone();                  // increases a reference count
 
 
@@ -282,11 +208,140 @@ let t: Rc<String> = s.clone();                  // increases a reference count
 
 
 
+//==================== Ranges
+let r: Range<i32> = 1..5;          // range from 1 to 4 (not including 5)
+
+
+
+//==================== Iterators
+let mut cont: T1<T2> = /* ... */;           // defines a container type T1 with elements of type T2
+let mut iter: Iter<'_, T2 > = cont.iter();  // creates an iterator over the vector
+iter.next();                                // returns Option<&T2>, and advances the iterator
+
+
+
+//==================== Arrays, Slices
+//---------- types
+[T; N];                                       // type denoting a const size array of length N with values of type T
+&[T], &mut [T];                               // (mutable) slice of a sequence container (vector, array, string, etc.)
+
+//---------- declarations
+let arr: [i32; 2] = [1, 2];                   // declaration of an array holding [1, 2]
+let arr: [i32; 2] = [5; 2];                   // declaration of an array holding [5, 5]
+let arr_slice: &[i32] = &arr;                 // creates a slice containing the whole array
+let arr_slice: &[i32] = &arr[1..];            // creates a slice starting at 1-st element
+let arr_slice: &[i32] = &arr[1..4];           // 1-st element end ending at 4-th element (not included)
+
+//---------- indexing
+arr[i];             // i-th element of arr; i must be 'usize' and in [ 0, arr.len() - 1 ]
+&arr[i];            // reference to i-th element of arr; i must be 'usize' and in [ 0, arr.len() - 1 ]
+
+vec.get(0)          // returns an Option<&T> for the first element of v
+
+
+
+//==================== Vectors
+Vec<T>;                                       // dynamically allocated sequence with values of type T
+let vec: Vec = Vec::<i32>::new();             // creates an empty vector of type i32
+               Vec::<i32>::with_capacity(N);  // use to allocate capacity at creation
+let vec: Vec<i32> = (1..4).collect();         // creates a vector containing [1, 2, 3]
+let vec: Vec<i32> = vec![1, 2];               // creates a vector containing [1, 2]
+let vec: Vec<i32> = vec![5; 2];               // creates a vector containing [5, 5]
+let vec_slice: &[i32] = &vec;                 // creates a slice containing the whole vector
+
+//---------- indexing
+// same as in arrays
+
+//---------- modification
+vec.push(4);        // adds an element to the end of the vector
+vec.pop();          // removes the last element of the vector; returns Option<T>
+
+//---------- iterators
+vec.iter()          // returns an iterator; does imutable borrow
+
+
+
+//==================== String Types
+// stored in memory as UTF-8 with variable-width encoding
+
+//---------- types
+String;                     // dyn. sized heap string (i.e. Vec<u8> guaranteed to hold well-formed UTF-8 chars)
+&str;                       // ref. to a UTF-8 (i.e. &[u8] guaranteed as above); can be ref to a string literal living in read-only memory
+&mut str;                   // exists but can't modify the strings; only make_ascii_uppercase and make_ascii_lowercase are allowed
+
+//---------- declarations
+let s = String::new();      // creates an empty String
+let s = String::from("hi"); // creates a String
+let s = "hi".to_string();   // converts &str to String; available for all types implementing Display trait
+
+let s = "Hi, world!";       // defines a &'static str (string literal saved in read-only memory with the code)
+let s:&str = "Hi, world!";  // similar as above
+let s: &[u8; 3] = b"GET";   // byte string; use br"text" for raw byte strings
+
+//---------- indexing
+s1[0];                      // does not work
+s1.chars()                  // returns an iterator over the characters
+s1.bytes()                  // returns an iterator over the bytes (u8)
+                            // grapheme clusters from strings is complex; use crate with this functionality
+
+//---------- modification
+let mut s1 = String::from("Hello"); // creates a mutable string
+s1.push_str(" world");              // appends a string slice to the end of the string
+s1.push('!');                       // appends a single character to the end of the string
+s1.remove(0);                       // removes the character at the specified position
+s1.insert(0, 'H');                  // inserts a character at the beginning of the string
+s1.insert_str(5, " beautiful");     // inserts a string slice at the specified position
+let s2 = String::from("Meow.");
+let s3 = s1 + &s2;                  // s1 moved, s2 borrowed; uses deref coercion and fn add(self, s: &str) -> String
+
+
+//---------- other moethods
+s1.split_whitespace();              // returns an iterator over the subslices separated by whitespace
+
+//---------- ways to create string
+"\"Ouch!\" he said.\n";     // classic escaping of characters
+"line 1,
+    line 2 with spaces";    // new line character and leading white spaces are included
+"line 1\
+    still line 1"           // new line character and leading white spaces are dropped
+r"raw string";              // everything inside is included verbatim; r##"alternative with # signs"##
+
+
+
+//==================== HashMap
+use std::collections::HashMap;                  // uses of SipHash, denial-of-service (DoS)
+
+let mut hm: HashMap<K, V> = HashMap::new();     // K and V could be references, but then the variables must outlive the map
+
+//---------- modification
+hm.insert(k1, v1);          // k1, v1 are moved unless they implement Copy trait; returns Option<V> Some(old_value)
+hm.get(k1);                 // returns Option<&V>; returns None if k1 is not found
+hm.entry(k1);               // returns Entry<K, V>; allows to modify the value if it exists or insert a new one
+
+
+//---------- iterating
+for (key, value) in &hm;    // iterates over the k-v pairs
+
+
+
+//==================== Entry
+let e = hm.entry(k1);       // Entry<K, V> where K and V are from the HashMap
+e.or_insert(v1);            // inserts v1 if k1 not found; returns a mutable reference to hm[k1];
+
+
+
+//==================== Macros
+
+println!("Hello, world!");      // prints to the standard output
+let s = format!("{s1}-{s2}");   // creates a formatted string
+
+
+
 //==================== Functions
 // the convention are snake-case function names
 // must be defined somewhere in a scope that can be seen by the caller (not necesarily before the call)
 fn fct() {/*...*/}                          // a function with no return
-fn fct(x:i32, y:f32) {/*...*/}              // a function with parameters i32 and f32; and no return
+fn fct(x:i32, y:f32) {/*...*/}              // a function with parameters i32 and f32 (types are mandatory); and no return
 fn fct(x:i32) -> i32 {                      // a function with a parameter i32 returning i32
     x + 1                                   // implicit return statement; can be replaced by 'return x + 1;'
 }
@@ -299,16 +354,11 @@ fn(&str) -> bool            // pointer to function taking a string and returning
 
 //==================== Ownership
 
-//---------- Assignment and Functions
-fn fct(s: String) -> String {/*...*/};  // a fn taking a string
-let s1 = String::from("hello");         // creates a string
-let s2 = s1;                            // moves s1 into s2; s1 cannot be used after this point
-let s3 = fct(s2);                       // moves s2 into the fct, s2 cannot be used after this point; s3 contain the string moved from the fct
-
-//---------- Cloning
-let s1 = String::from("hello");
-let s2 = s1.clone();
-println!("s1 = {}, s2 = {}", s1, s2);
+//---------- Ownership and Functions
+fn fct(s: String) {/*...*/};        // a fn taking a string
+let s1 = String::from("hello");     // creates a string
+let s2 = s1;                        // moves s1 into s2; s1 cannot be used after this point
+fct(s2);                            // moves s2 into the fct; s2 cannot be used after this point
 
 //---------- References and Borrowing
 // const reference
@@ -325,8 +375,8 @@ fct(&mut s1);                       // passes a reference; does not move s1 anyw
 // Mutable references cannot coexist with other mutable or immutable references to the same variable!
 let r1 = &s; // no problem
 let r2 = &s; // no problem
-let r3 = &mut s; // BIG PROBLEM, immutable references already exist
-let r4 = &mut s; // BIG PROBLEM, both mutable and immutable references aready exist
+let r3 = &mut s; // BIG PROBLEM
+let r4 = &mut s; // BIG PROBLEM
 
 // Reference's scope lasts untill its last ussage (Non-Lexical Lifetime)
 let r1 = &s;                        // no problem
@@ -338,14 +388,13 @@ println!("{}", r3);
 
 
 //==================== Structs
-#[derive(Debug)]                    // kinda decorator; helps with printing the struct with println!()
-struct Rectangle {                  // struct definition
-    width: i64,                     // member field and its type
-    height: u64,                    // member field and its type
+struct Rectangle {                  // struct definition; no support for partialy mutable fields (either the whole thing is mut or not)
+    width: u32,                     // width field and its type
+    height: u32,                    // height field and its type
 }
 
 impl Rectangle {                    // implementation block for associated functions; multiple impl blocks are allowed
-    fn area(&self) -> u32 {         // member function; shorthand for area(self: &Self), i.e. it borrows a reference
+    fn area(&self) -> u32 {         // member functions are statically dispatched by default, and exist as free-standing functions
         self.width * self.height    // returns the expression (no semicolon); equivalent to return ...;
     }
     fn square(size: u32) -> Self {  // 'constructor' for a square rectangle; Self is alias for Rectangle
@@ -355,129 +404,202 @@ impl Rectangle {                    // implementation block for associated funct
     }
 }
 
-let st1 = Rectangle {               // instantiation of a struct
-        width: 1,                   // assigning to the width
-        height: 1,                  // assigning to the height
+let st1 = Rectangle {               // instantiation of a struct; fields can be instantiated in any order
+    width: 1,                       // assigning to the width
+    height: 1,                      // assigning to the height
 };
-st1.width;                          // accessing the member width
-println!("{:#?}", st1)              // displays "Rectangle { width: 30, height: 50 }"; connected to #[derive(Debug)]
-println!("{:?}", st1)               // displays "Rectangle { width: 30, height: 50 }" with each memeber on a new line
+st1.width;                          // accessing the width
 
-let st2 = Rectangle {                // another instance of struct
+let st2 = Rectangle {               // another instance of struct
     width: 10,                      // assigning to the width
-    ..st1                           // move the remaining fields from st1; st1 no longer usable if it had heap allocated data
-};
+    ..st1                           // move the remaining fields from st1; this moves/copies movable/copyable traits from st1
+};                                  // ... if anything is moved from st1, it is no longer usable
+
+fn build_rect(width: u32, height: u32) -> Rectangle {   // function returning a Rectangle
+    Rectangle { width, height }                         // shorthand for 'Rectangle { width: width, height: height }'
+}
 
 let sq = Rectangle::square(3);      // using the 'constructor'
 
-
-fn build_rect(width: i64, height: u64) -> Rectangle {
-    Rectangle (                     // the rectangle instance will be moved
-        width: width,               // assigning the width
-        height                      // shorthand for height: height, only possible with same-name params
-    )
-}
+#[derive(Debug)]                    // kinda decorator; helps with printing the struct with println!()
+struct Another {/*...*/}            // just definition
 
 //---------- Tuple Structs
 struct Color(i32, i32, i32);        // define a tuple struct; i.e. a named tuple
+
 struct Point(i32, i32, i32);        // is different type from the above
+let origin = Point(0, 0, 0);
+let Point(x, y, z) = origin;        // destructuring the tuple struct; as oposed to tuples: let(x, y, z) = tup1
 
 //---------- Unit-Like Structs
-struct AlwaysEqual;                 // does not have any field
+struct AlwaysEqual;                 // does not have any field; has zero size;
+struct Success;                     // (Failure) can be used as a marker and variants
+
+struct Logger;                      // can be used to implement a stateless utils
+impl Logger {
+    fn log(&self, message: &str) {/* */}
+}
 
 
 
 //==================== Enums
-enum Attend {               // enumeration value can only be one of its variants
-    OnTime,                 // elements/variants can be empty
+enum Attend {               // enumeration
+    OnTime,                 // elements can be empty
     Late(u32)               // ... or hold a value
-}
+};
 
-enum Message {                      // enumeration value can only be one of its variants
-    Quit,                           // has no data associated with it
-    Move { x: i32, y: i32 },        // has named fields, like a struct does
-    Write(String),                  // includes a single String
-    ChangeColor(i32, i32, i32),     // includes three i32 values
-}
-
-impl Message {                      // implementation block for member functions
-    fn call(&self) {/*...*/}
-}
-let m = Message::Write(String::from("hello"));
-m.call();
-
-enum IpAddrKind {
-    V4(u8, u8, u8, u8),
-    V6(String),
-}
-let home = IpAddr::V4(127, 0, 0, 1);
-let loopback = IpAddr::V6(String::from("::1"));
-
-
-
-//==================== Optionals and Errors
-Option<&str>                // optional value, either None or Some(value); e.g. 'None' or 'Some("Dr.")'
-Result<u64, Error>          // result of op. that may fail, either Ok(value) or Err(e); e.g. 'Ok(123)' or 'Err(Error::last_os_error())'
-
-
-
-//==================== Pattern Matching
-enum UsState {Alabama/*,...*/}
-enum Coin { Penny, Nickel, Dime, Quarter(UsState)}
-fn value_in_cents(coin: Coin) -> u8 {
-    match coin {
-        Coin::Penny => 1,
-        Coin::Nickel => 5,
-        Coin::Dime => 10,
-        Coin::Quarter(state) => {
-            println!("State quarter from {:?}!", state);
-            25
+impl Attend {                           // enums can have methods, rest is as in structs
+    fn is_late(&self) -> bool {
+        match self {
+            Attend::OnTime => false,
+            Attend::Late(_) => true,
         }
-        other => do_sth(other),     // placed at the end, calls a specific fn on other values (not aplicable here)
-        _ => dont_even_catch(),     // placed at the end, default action for all other values (not aplicable here)
-        _ => (),                    // placed at the end, do nothing for all other values (not aplicable here)
     }
 }
 
-// the following is a shortcut for pattern matching below
-let config_max = Some(3u8);
-if let Some(max) = config_max {
-    println!("The maximum is configured to be {}", max);
+
+
+//==================== Generics (Templates)
+fn fun<T>(param: T) -> T { /* ... */}   // template function
+
+struct Point<T> { x: T, y: T }          // template struct
+impl<T> Poinit<T> {                     // impl needs <T> too; could be different letter (tho everywhere)
+    fn x(&self) -> &T { &self.x }
+    fn mix<U, V> (&self, other: Point<U>) -> V { /* ... */ }  // method with multiple template parameters
 }
-// the pattern matching version
-let config_max = Some(3u8);
-match config_max {
-    Some(max) => println!("The maximum is configured to be {}", max),
-    _ => (),
+impl Point<f32> {
+    fn fun(&self) -> f32 { /* ... */ }  // method only for f32; can't be templated if there is a concrete impl
 }
+
+struct Point<T, U> { x: T, y: U }       // template struct, with different types
 
 
 
 //==================== Traits
+// one can implement trait on a type iff either the trait or the type is defined in the current crate
+pub trait TraitName{
+    fn method1(&self) -> i32 { /* ... */}   // method with self as a parameter and default implementation
+    fn method2(&self) -> f32 { /* ... */}   // method with self as a parameter and default implementation
+    fn method3(&self, param: i32);          // method with self and a parameter
+}
+
+pub struct StructName { /* ... */ }             // a struct defiinition
+impl TraitName for StructName {                 // implementation of TraitName for StructName
+                                                // method1 uses the default impl
+    fn method2(&self) -> f32 { /* ... */ }      // method2 overwrites the default impl
+    fn method3(&self, param: i32) { /* ... */ } // implementation of method3 (mandatory)
+}
+
+//---------- ussage
+pub fn fct1<T: TraitName>(item: &T) {           // fn that takes any type that implements TraitName, kinda polymorphism
+    item.method1();                             // call to method1 from TraitName
+}
+pub fn fct(item: & impl TraitName) {/* ... */}  // syntax sugar for the above
+
+//---------- conditional impl of methods
+impl<T: Trait1> Trait2 for T {/* ... */}    // implements Trait2 for all Ts that implement Trait1
+
+struct MyStruct<T> {/* ... */}          // generic struct with a type parameter T
+impl<T: TraitName> MyStruct<T> {        // conditional impl for MyStruct<T> where T implements TraitName
+    fn sth(&self) { /* ... */ }         // this is available only if T implements TraitName
+}
+
+//---------- details
+pub fn fct1(item1: &impl TraitName, item2: &impl TraitName) {}  // item1 and item2 can be different types
+pub fn fct1<T: TraitName>(item1: &T, item2: &T) {}              // both must be the same type
+
+pub fn fct1<T: Summary + Display>(item: &T) {}          // item must impl both
+pub fn fct1(item: &(impl Summary + Display)) {}         // as above
+
+fn fct2() -> impl TraitName {}                          // returns type that implements TraitName
+
+//---------- generics
+fn fct1<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {}   // complicated
+fn fct1<T, U>(t: &T, u: &U) -> i32                                      // as above
+where                                                                   // details are in the where block
+    T: Display + Clone,
+    U: Clone + Debug,
+{}
+
+// ---------- trait objects
 &dyn Any, &mut dyn Read     // Trait object, reference to any value that implements a given set of methods; e.g. 'value as &dyn Any' or '&mut file as &mut dyn Read'
 
 
 
+//==================== Option
+//---------- types
+pub enum Option<T> { None, Some(T) }    // definitioon
+
+Option<T>               // option enum, either None or Some(value); e.g. 'None' or 'Some("Dr.")'
+                        // ... has a lot of member functions, e.g. is_none, is_some, etc.
+
+opt.unwrap();           // returns the value if Some, panics if None
+opt.copied();           // fn copied (Option<&T>) -> Option<T>; copies the value if Some, returns None if None
+opt.unwrap_or();        // returns the value if Some, or the default value if None; eagerly evaluated
+
+
+
+//==================== Result
+pub enum Result<T, E> { Ok(T), Err(E) }   // definition
+
+Result<T, E>            // result of op. that may fail, either Ok(value) or Err(e); e.g. 'Ok(123)' or 'Err(Error::last_os_error())'
+
+let x = match res {                 // a way to handle Result
+    Ok(val) => val,                 // if res is Ok, returns the value
+    Err(e) => panic!("Error: {e}"), // if res is Err, panics with the error message
+};
+
+res.unwrap();           // returns the value if Ok, panics if Err
+res.expect("message");  // returns the value if Ok, panics with the message if Err
+
+let val = res?;         // if OK(val) assigns val, else early fn return or Err.
+                        // only in fns returning Result<T, E>, Option<T> or types that implement FromResidual
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&mut username)?;
+    Ok(username)
+}
+
+
+
 //==================== Statements
-
 //---------- Selection Statements
-
 if COND {/*...*/}           // if statement; COND must evaluate to bool; COND does not have parenthesis
 else if COND {/*...*/}      // else if statement
 else {/*...*/}              // else branch
 
 let num: i32 = if COND { 5 } else { 6 };    // can be used as an expression; both branches have to return the same type
 
-//---------- Iteration Statements
+match expr {                        // match statement; all options have to be covered
+    PATTERN1 => EXPR1,              // only the first matching pattern is executed
+    PATTERN2 => {Multi_line_EXPR2}, // {} are mandatory if the expresion is multi-line
+    _ => EXPR3,                     // default case, _ catches all options and ignores them, returns EXPR3
+    var => EXPR4(var),              // as above, but does not ignored the caught value
+    _ => (),                        // as above, but does nothing
+}
 
+let var = Some(3u8);
+if let Some(n) = var {              // if let statement; only matches the Some(n) pattern
+    println!("The value is {n}.");
+} else {/* */}                      // else branch is optional
+
+let var = None;
+let Some(n) = var else {            // let else statement; like above but matches the else part
+    println!("No value found.");
+}
+
+//---------- Iteration Statements
 // loop loop
 loop {/*...*/}              // executes the loop indefinitelly untill break is called
 'l_name: loop {/*...*/}     // as above but loop has a name 'l_name'
 
 // keywords
 break;                      // break out of the most inner loop
-break 'l_name;              // break out of the 'l_name' loop
 break EXPR;                 // as above but returns the result of the EXPR
+break 'l_name;              // break out of the 'l_name' loop
+break 'l_name EXPR;         // break out of the 'l_name' loop and returns the result of the EXPR
 continue;                   // skip the rest of the loop
 
 // while loop
@@ -485,6 +607,74 @@ while COND {/*...*/}        // while loop
 
 // for loop
 for elem in arr {/*...*/}   // for loop; faster, does not do bounds checks when accessing the array element
+
+
+//==================== Lifetimes
+//---------- elision rules
+// 1. A different lifetime parameter is assigned to each input ref. parameter
+// 2. If there is exactly one input ref. parameter, all output lifetimes are assigned that input lifetime
+// 3. If one of the input ref. params is &self or &mut self (i.e. it's a method) all output lifetimes are assigned the lifetime of &self.
+
+//---------- lifetime annotations
+&i32        // a reference
+&'a i32     // a reference with an explicit lifetime
+&'a mut i32 // a mutable reference with an explicit lifetime
+
+//---------- lifetime in functions
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+//---------- lifetime in structs
+struct Excerpt<'a> {    // this means that the excerpt cannot outlive the lifetime 'a
+    part: &'a str,
+}
+impl<'a> Excerpt<'a> {
+    fn level(&self) -> i32 {
+        3
+    }
+}
+
+//---------- static lifetime
+let s: &'static str = "I live forever!";    // all string literals have static lifetime
+
+
+
+//==================== Packages & Crates
+
+// path         - an item, such as a struct, function, or module; call from:
+//   <crate_name>::<module>::<submodule>::<item>;   - another crate
+//   crate::<module>::<submodule>::<item>;          - from the same crate absolute path
+//   <submodule>::<item>;                           - relative path from the current module
+//   super::<submodule>::<item>;                    - relative path from the parent module
+// (pub) use crate::<module>::<submodule>;          - allows <submodule>::<item>; can be combined with pub for re-exporting
+// (pub) use crate::<module>::<submodule> as smod;  - allows smod::<item>; can be combined with pub for re-exporting
+// (pub) use std::{cmp::Ordering, io};              - equivalent to use std::cmp::Ordering; use std::io;
+// (pub) use std::io::{self, Write};                - equivalent to use std::io; use std::io::Write;
+// (pub) use std::collections::*;                   - brings all public items from std::collections into scope
+
+// module       - the organization, scope, and privacy of paths
+
+// crates       - a tree of modules that produces a library or executable
+//   binary     - a crate that produces an executable
+//   library    - a crate that produces a library
+//   crate root - the source file that the compiler starts from
+
+// packages     - a bundle of one or more crates; can contain at most one library crate but multiple binary crates
+//   src/main.rs- crate root for a binary crate with the same name as the project
+//   src/lib.rs - crate root for a library crate with the same name as the project
+//   src/bin    - directory containing additional binary crates
+
+// crate root                   - can define modules
+//   mod mod_name{/* */}        - inline definition
+//   mod mod_name;              - searches first src/mod_name.rs, then src/mod_name/mod.rs
+
+// other than the crate root    - can define submodule
+//   mod submod_name{/* */}     - inline definition
+//   mod submod_name;           - searches first src/mod_name/submod_name.rs, then src/mod_name/submod_name/mod.rs
+
+// private vs. public           - items and modules are private by default; use pub to make them public (i.e. visible outside the module)
+//                              - items in pub mod are private by default (i.e. visible only inside the module)
 
 
 
@@ -549,7 +739,6 @@ for elem in arr {/*...*/}   // for loop; faster, does not do bounds checks when 
 |=              var |= expr                                         // Bitwise OR and assignment                    BitOrAssign
 ||              expr || expr                                        // Short-circuiting logical OR
 ?               expr?                                               // Error propagation
-
 
 
 
