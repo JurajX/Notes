@@ -1,0 +1,2 @@
+[profile.release]
+panic = 'abort'         # aborts on panic instead of unwinding
