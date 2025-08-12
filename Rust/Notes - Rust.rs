@@ -28,6 +28,7 @@
 // - Option
 // - Statements
 // - Lifetimes
+// - Tests
 // - Packages & Crates
 // - Operators
 // - Keywords
@@ -552,7 +553,7 @@ let x = match res {                 // a way to handle Result
 res.unwrap();           // returns the value if Ok, panics if Err
 res.expect("message");  // returns the value if Ok, panics with the message if Err
 
-let val = res?;         // if OK(val) assigns val, else early fn return or Err.
+let val = res?;         // if OK(val) assigns val, else early fn return of Err.
                         // only in fns returning Result<T, E>, Option<T> or types that implement FromResidual
 
 fn read_username_from_file() -> Result<String, io::Error> {
@@ -638,6 +639,44 @@ impl<'a> Excerpt<'a> {
 //---------- static lifetime
 let s: &'static str = "I live forever!";    // all string literals have static lifetime
 
+
+
+//==================== Tests
+pub fn add(a: i32, b: i32) -> i32 {/* ... */}   // fn to test
+
+#[cfg(test)]
+mod tests {
+    use usper::*;                   // make everything from outsice available
+
+    #[test]                         // indicates that next fn is a test
+    fn test_add() {
+        assert_eq!(add(2, 3), 5);
+    }
+    #[test]
+    fn test_add2() -> Result<(), String> {          // test returns Result, allows to use ? operator
+        if add(2, 2) == 4 {
+            return OK(());                          // when test passes
+        } else {
+            return Err(String::from("err msg"));    // when test fails
+        }
+    }
+
+    #[test]
+    #[should_panic]                 // marks the test as panicking
+    fn should_panic() { /* ... */}  // passes if the function panics
+
+}
+
+//---------- other test annotations
+#[test]                                 // a test fn
+#[should_panic]                         // a panicking fn
+#[should_panic(expected = "substr")]    // as above + panick msg contains expected
+
+//---------- other test macros
+assert!(bool_var);
+assert!(bool_var, "Failure msg {}.", 4);    // prints "Failure msg 4." when fail
+assert_eq!(left, rigth);
+assert_ne!(left, rigth);
 
 
 //==================== Packages & Crates

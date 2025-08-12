@@ -6,3 +6,5 @@ cargo build             # build a project in target/debug or target/release with
 cargo run               # build and run a project in one step (--release flag as above)
 cargo check             # build a project without producing a binary; check for errors
 cargo clean             # deletes the build files
+
+cargo test              # run all tests in the project
