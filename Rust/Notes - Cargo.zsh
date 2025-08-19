@@ -8,3 +8,9 @@ cargo check             # build a project without producing a binary; check for 
 cargo clean             # deletes the build files
 
 cargo test              # run all tests in the project
+  -- --test-threads=N   # run with N threads, default 1 thread per logical CPU
+  -- --show-output      # shows std-out of passing tests
+  -- --ignored          # runs the tests annotated with #[ignore]
+  -- --include-ignored  # runs ignored and non-ignored tests
+  name_filter           # runs only tests that match the filter string
+  --test test_file      # runs only integration test from test_file

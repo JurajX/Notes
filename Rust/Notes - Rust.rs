@@ -667,8 +667,11 @@ mod tests {
 
 }
 
-//---------- other test annotations
+//---------- other test (module) annotations
+#[cfg(opt)]                             // includes the annotated module only when configuration option opt is given
+#[cfg(test)]                            // skips compiling tests except when cargo test is run
 #[test]                                 // a test fn
+#[ignore]                               // annotates a test that is ignored by default
 #[should_panic]                         // a panicking fn
 #[should_panic(expected = "substr")]    // as above + panick msg contains expected
 
@@ -677,6 +680,15 @@ assert!(bool_var);
 assert!(bool_var, "Failure msg {}.", 4);    // prints "Failure msg 4." when fail
 assert_eq!(left, rigth);
 assert_ne!(left, rigth);
+
+//---------- unit tests
+// live directly beside the code in tests module
+// allow to test private functions
+
+//---------- integration tests
+// integration tests live in the <root>/tests/ directory
+// each file in the tests dir is compiled into a separate crate, folders of tests folder are not considered
+// common set-up fns can be placed in <root>/tests/common/mod.rs (the old convention)
 
 
 //==================== Packages & Crates
