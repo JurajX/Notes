@@ -19,6 +19,7 @@
 // - Entry
 // - Macros
 // - Functions
+// - Closures (Lambdas)
 // - Ownership
 // - Structs
 // - Enums
@@ -30,6 +31,7 @@
 // - Lifetimes
 // - Tests
 // - Packages & Crates
+// - Docs
 // - Operators
 // - Keywords
 
@@ -219,6 +221,14 @@ let mut cont: T1<T2> = /* ... */;           // defines a container type T1 with 
 let mut iter: Iter<'_, T2 > = cont.iter();  // creates an iterator over the vector
 iter.next();                                // returns Option<&T2>, and advances the iterator
 
+//---------- mutability
+let v = vec![1, 2, 3];
+let mut iter = v.iter();            // immutable iterator over immutable vector
+let mut into_iter = v.iter_mut();   // mutable iterator over vector
+let mut into_iter = v.into_iter();  // consuming iterator over vector
+
+let v: Vec<_> = v1.iter().map(|x| x + 1).collect();     // creates a new vector
+
 
 
 //==================== Arrays, Slices
@@ -347,9 +357,33 @@ fn fct(x:i32) -> i32 {                      // a function with a parameter i32 r
     x + 1                                   // implicit return statement; can be replaced by 'return x + 1;'
 }
 
-//---------- pointers and lambdas
-fn(&str) -> bool            // pointer to function taking a string and returning a boolean, e.g. 'str::is_empty'
-                            // closure, e.g. '|a, b| { a*a + b*b }'
+
+
+//==================== Closures (Lambdas)
+/*...*/ |/*...*/| {/*...*/};    // closure definition, args go in between ||, caputres implicitely
+
+//---------- comparison with fn definition
+fn  add_one_v1   (x: u32) -> u32 { x + 1 }  // fn
+let add_one_v2 = |x: u32| -> u32 { x + 1 }; // closure with annotations
+let add_one_v3 = |x|             { x + 1 }; // closure without annotations
+let add_one_v4 = |x|               x + 1  ; // closure without annotations
+
+add_one_v4(5);          // returns 6; inferred type is u32
+add_one_v4(5.0);        // does not compile
+
+let toilet = |_| ();    // sometimes called the "toilet closure"
+
+//---------- moving captured vars
+let x = 5;
+move || { x + 1};       // moves x to the closure
+
+let list = vec![1, 2, 3];
+thread::spawn(move || println!("{list:?}")).join().unwrap() // move is necessary here
+
+//---------- traints closures implement
+// FnOnce - can be called once (all closures implement this), usually moves captured values
+// FnMut - don't move caputred values, but mutate captured values
+// Fn - don't move or mutate caputred values
 
 
 
@@ -728,6 +762,42 @@ assert_ne!(left, rigth);
 //                              - items in pub mod are private by default (i.e. visible only inside the module)
 
 
+
+//==================== Docs
+// The doc string starting with '///' and is placed before the documenting element
+// The doc string starting with '//!' and is placed at the top of a file or module
+// The code examples are run as tests when running cargo test
+
+// #![deny(missing_docs)]       - treat undocumented code as error
+
+//! # My Crate
+//!
+//! `my_crate` is a collection of utilities to make performing certain
+//! calculations more convenient.
+
+/// Adds one to the number given.
+///
+/// # Examples
+///
+/// ```
+/// let arg = 5;
+/// let answer = my_crate::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+
+//==================== Workspace
+// Share the same Cargo.lock and output directory.
+// dir structure:
+// - my_workspace
+//   - Cargo.toml           - workspace manifest
+//   - member_crate_1       - classic crate of a member
+//   - member_crate_2       - same as above
+// - target                 - output directory
 
 //==================== Operators
 // method calls have a higher precedence than unary prefix operators

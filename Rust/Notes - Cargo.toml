@@ -1,2 +1,24 @@
+[package]
+name = "my_crate"       # the crate name
+version = "0.1.0"       # the crate version
+edition = "2021"        # the crate edition
+description = "sth"     # appears in search results on crates.io
+license = "L1 OR L2"    # supports multiple licenses
+
+[profile.dev]           # the default profile
+opt-level = 0           # default
+
 [profile.release]
-panic = 'abort'         # aborts on panic instead of unwinding
+panic = 'unwind'        # default
+panic = 'abort'         # aborts on panic instead of unwind
+opt-level = 3           # default
+
+
+# =========== Workspace
+[workspace]
+resolver = "3"          # finds a consistent set of crate versions that satisfy all requirements and constraints
+members = ["X", "Y"]    # a list of member crates
+
+# =========== Workspace - individual package X
+[dependencies]
+Y = { path = "../Y" }   # X depends on Y
