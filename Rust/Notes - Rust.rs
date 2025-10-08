@@ -9,6 +9,9 @@
 // - Tuple
 // - References
 // - Box and Reference Counts
+// - RefCell
+// - Deref Trait
+// - Drop Trait
 // - Raw Pointers
 // - Ranges
 // - Iterators
@@ -194,7 +197,10 @@ r1 == rr1;                  // this is not allowed
 Box<T>                      // a smart pointer owning pointer to value on the heap (unique_ptr)
 std::rc::Arc<T>;            // atomic reference count, used for thread-safe code
 std::rc::Rc<T>;             // reference count, used for non-thread-safe code (shared_ptr)
+.downgrade()                // returns a Weak<T>
+
 std::rc::Weak<T>;           // weak pointer; (weak_ptr)
+.upgrade()                  // returns a Option<Rc<T>>.
 
 //---------- declarations
 let t = (12, "eggs");       // defines a tuple
@@ -202,6 +208,44 @@ let b = Box::new(t);        // allocates a tuple on the heap
 
 let s: Rc<String> = Rc::new("str".to_string()); // creates a string rc pointer; read-only; behaves like a variable
 let t: Rc<String> = s.clone();                  // increases a reference count
+
+
+
+//==================== RefCell
+// This can be chained with Rc<T> to give a mutable reference (RefCell<Rc<T>>).
+std::cell::RefCell<T>;      // A mutable memory location with dynamically checked borrow rules.
+.borrow()                   // returns Ref<T>
+.borrow_mut()               // returns RefMut<T>
+
+fn send(&self) {            // a member fn that takes non-mutable self
+    self.rcell.borrow_mut() // can modify a memver value that was wrapped in RefCell
+}
+
+
+
+//==================== Deref Trait
+// Smart pointers implement Deref trait so that they can be used in place of regular references.
+// Deref coercion happens in these cases:
+//   From &T to &U when T: Deref<Target=U>
+//   From &mut T to &mut U when T: DerefMut<Target=U>
+//   From &mut T to &U when T: Deref<Target=U>
+use std::ops::Deref;
+struct MyBox<T>(T);
+impl<T> Deref for MyBox<T> {            // requires to implement deref method
+    type Target = T;                    // an associated type
+    fn deref(&self) -> &Self::Target {  // borrows self -> a reference to the inner data
+        &self.0
+    }
+}
+
+
+
+//==================== Drop Trait
+// destructor can be called manually by calling std::mem::drop(var)
+struct CustomSmartPointer {data: String}
+impl Drop for CustomSmartPointer {
+    fn drop(&mut self) {/* ... */}      // implementation of a destructor
+}
 
 
 
@@ -478,6 +522,7 @@ impl Logger {
 
 
 //==================== Enums
+// like std::variant in c++ (type safe union of c++)
 enum Attend {               // enumeration
     OnTime,                 // elements can be empty
     Late(u32)               // ... or hold a value
