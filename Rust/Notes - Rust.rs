@@ -33,6 +33,8 @@
 // - Statements
 // - Lifetimes
 // - Tests
+// - Time
+// - Threads
 // - Packages & Crates
 // - Docs
 // - Operators
@@ -768,6 +770,19 @@ assert_ne!(left, rigth);
 // integration tests live in the <root>/tests/ directory
 // each file in the tests dir is compiled into a separate crate, folders of tests folder are not considered
 // common set-up fns can be placed in <root>/tests/common/mod.rs (the old convention)
+
+
+
+//==================== Time
+use std::time::Duration;
+
+Duration::from_millis(1);       // creates a Duration of 1 millisecond
+
+
+//==================== Threads
+use std::thread;
+let handle = thread::spawn(|| {/* */});     // creates a thread that runs the closure
+handle.join().unwrap();                     // waits for the thread to finish
 
 
 //==================== Packages & Crates
